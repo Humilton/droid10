@@ -1,0 +1,43 @@
+site_name: 安卓10
+site_url: http://droid10.com/
+repo_name: Humilton/droid10
+repo_url: https://github.com/Humilton/droid10
+nav:
+- 主页:
+  - index.md
+  - 环境: 'Android/Android10源码下载.md'
+  - 框架: 'Android/Android10源码下载.md'
+  - 漏洞: 'Android/Android10源码下载.md'
+  - 应用: 'Android/Android10源码下载.md'
+- 环境:
+  - Android/Android10源码下载.md
+- 框架:
+  - Android/Android10源码下载.md
+- 漏洞:
+  - Android/Android10源码下载.md
+- 应用:
+  - Android/Android10源码下载.md
+theme: 
+  name: material
+  language: zh
+  palette:
+    primary: white
+    accent: red
+    scheme: preference
+  icon:
+    repo: fontawesome/brands/github-alt
+  logo: img/droid10.png
+  features:
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - search.suggest
+  - search.highlight
+  - search.share
+  font:
+    text: Noto Sans
+    code: Source Code Pro
+plugins:
+- search
+- minify:
+    minify_html: true
+copyright: Copyright &copy; 2022 - 3022  <span style="float:right"><a href="http://beian.miit.gov.cn/">鄂ICP备19027194号</a></span>
