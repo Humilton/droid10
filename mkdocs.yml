@@ -6,17 +6,18 @@ nav:
 - 主页:
   - index.md
   - 环境: 'Android/Android10源码下载.md'
-  - 框架: 'Android/Android10源码下载.md'
-  - 漏洞: 'Android/Android10源码下载.md'
-  - 应用: 'Android/Android10源码下载.md'
+  - 框架: 'Android/恢复模式.md'
+  - 漏洞: 'Poc/黑客可以利用三星预装的应用程序来监视用户.md'
+  - 应用: 'App/android内存泄露优化总结.md'
 - 环境:
   - Android/Android10源码下载.md
+  - Android/Android基础操作.md
 - 框架:
-  - Android/Android10源码下载.md
+  - Android/恢复模式.md
 - 漏洞:
-  - Android/Android10源码下载.md
+  - Poc/黑客可以利用三星预装的应用程序来监视用户.md
 - 应用:
-  - Android/Android10源码下载.md
+  - App/android内存泄露优化总结.md
 theme: 
   name: material
   language: zh
