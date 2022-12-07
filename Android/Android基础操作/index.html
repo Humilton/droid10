@@ -31,6 +31,13 @@ make lpunpack
 </code></pre> <ol> <li>从 raw image 解包出分区镜像文件</li> </ol> <pre><code>./lpunpack -p system super.img_raw  system   # 这里 sytem 是目标目录，可以自己创建
 </code></pre> <ol> <li>用Linux挂载命令进行挂载：</li> </ol> <pre><code>sudo mount -t ext4 system.img XXX
 </code></pre> <h3 id=4>4 抓日志</h3> <p><code>getLogs.bat</code></p> <pre><code class=language-bat>adb root
+
+set d=%date:~0,4%%date:~5,2%%date:~8,2%
+if %time:~0,2% LEQ 9 (set t=0%time:~1,1%%time:~3,2%%time:~6,2%) else (set t=%time:~0,2%%time:~3,2%%time:~6,2%) 
+echo %d%-%t%
+mkdir Log-%d%-%t%
+cd Log-%d%-%t%
+
 adb shell ps -A &gt; ps.txt
 ::
 ::adb shell am dumpheap 1051 /data/local/tmp/system-server.hprof
@@ -73,6 +80,7 @@ adb shell perfetto -o /data/misc/perfetto-traces/trace_file.perfetto-trace -t 30
 adb pull /data/misc/perfetto-traces/trace_file.perfetto-trace
 
 del tmp.bat
+cd ..
 
 pause
 
