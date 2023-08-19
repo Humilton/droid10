@@ -14,6 +14,7 @@ nav:
   - Android/Android基础操作.md
 - 框架:
   - Android/恢复模式.md
+  - 'Android/Android AppActivity 启动流程分析.md'
 - 漏洞:
   - Poc/黑客可以利用三星预装的应用程序来监视用户.md
 - 应用:

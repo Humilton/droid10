@@ -87,6 +87,13 @@ sudo mount -t ext4 system.img XXX
 `getLogs.bat`
 ```bat
 adb root
+
+set d=%date:~0,4%%date:~5,2%%date:~8,2%
+if %time:~0,2% LEQ 9 (set t=0%time:~1,1%%time:~3,2%%time:~6,2%) else (set t=%time:~0,2%%time:~3,2%%time:~6,2%) 
+echo %d%-%t%
+mkdir Log-%d%-%t%
+cd Log-%d%-%t%
+
 adb shell ps -A > ps.txt
 ::
 ::adb shell am dumpheap 1051 /data/local/tmp/system-server.hprof
@@ -129,6 +136,7 @@ adb shell perfetto -o /data/misc/perfetto-traces/trace_file.perfetto-trace -t 30
 adb pull /data/misc/perfetto-traces/trace_file.perfetto-trace
 
 del tmp.bat
+cd ..
 
 pause
 
