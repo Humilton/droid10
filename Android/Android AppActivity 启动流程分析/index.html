@@ -1,0 +1,1059 @@
+<!doctype html><html lang=zh class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link href=http://droid10.com/Android/Android%20AppActivity%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/ rel=canonical><link href=../%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ rel=prev><link href=../../Poc/%E9%BB%91%E5%AE%A2%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E4%B8%89%E6%98%9F%E9%A2%84%E8%A3%85%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%9D%A5%E7%9B%91%E8%A7%86%E7%94%A8%E6%88%B7/ rel=next><link rel=icon href=../../assets/images/favicon.png><meta name=generator content="mkdocs-1.5.2, mkdocs-material-9.1.21"><title>Android AppActivity 启动流程分析 - 安卓10</title><link rel=stylesheet href=../../assets/stylesheets/main.eebd395e.min.css><link rel=stylesheet href=../../assets/stylesheets/palette.ecc896b0.min.css><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Noto+Sans:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Noto Sans";--md-code-font:"Source Code Pro"}</style><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script></head> <body dir=ltr data-md-color-scheme=preference data-md-color-primary=white data-md-color-accent=red> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#1-launcher-ams class=md-skip> 跳转至 </a> </div> <div data-md-component=announce> </div> <header class="md-header md-header--shadow md-header--lifted" data-md-component=header> <nav class="md-header__inner md-grid" aria-label=页眉> <a href=../.. title=安卓10 class="md-header__button md-logo" aria-label=安卓10 data-md-component=logo> <img src=../../img/droid10.png alt=logo> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> 安卓10 </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> Android AppActivity 启动流程分析 </span> </div> </div> </div> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=搜索 placeholder=搜索 autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg> </label> <nav class=md-search__options aria-label=查找> <a href=javascript:void(0) class="md-search__icon md-icon" title=分享 aria-label=分享 data-clipboard data-clipboard-text data-md-component=search-share tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg> </a> <button type=reset class="md-search__icon md-icon" title=清空当前内容 aria-label=清空当前内容 tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg> </button> </nav> <div class=md-search__suggest data-md-component=search-suggest></div> </form> <div class=md-search__output> <div class=md-search__scrollwrap data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> 正在初始化搜索引擎 </div> <ol class=md-search-result__list role=presentation></ol> </div> </div> </div> </div> </div> <div class=md-header__source> <a href=https://github.com/Humilton/droid10 title=前往仓库 class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 480 512"><!-- Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg> </div> <div class=md-source__repository> Humilton/droid10 </div> </a> </div> </nav> <nav class=md-tabs aria-label=标签 data-md-component=tabs> <div class=md-grid> <ul class=md-tabs__list> <li class=md-tabs__item> <a href=../.. class=md-tabs__link> 主页 </a> </li> <li class=md-tabs__item> <a href=../Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-tabs__link> 环境 </a> </li> <li class=md-tabs__item> <a href=../%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class="md-tabs__link md-tabs__link--active"> 框架 </a> </li> <li class=md-tabs__item> <a href=../../Poc/%E9%BB%91%E5%AE%A2%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E4%B8%89%E6%98%9F%E9%A2%84%E8%A3%85%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%9D%A5%E7%9B%91%E8%A7%86%E7%94%A8%E6%88%B7/ class=md-tabs__link> 漏洞 </a> </li> <li class=md-tabs__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-tabs__link> 应用 </a> </li> </ul> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary md-nav--lifted" aria-label=导航栏 data-md-level=0> <label class=md-nav__title for=__drawer> <a href=../.. title=安卓10 class="md-nav__button md-logo" aria-label=安卓10 data-md-component=logo> <img src=../../img/droid10.png alt=logo> </a> 安卓10 </label> <div class=md-nav__source> <a href=https://github.com/Humilton/droid10 title=前往仓库 class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 480 512"><!-- Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg> </div> <div class=md-source__repository> Humilton/droid10 </div> </a> </div> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_1> <label class=md-nav__link for=__nav_1 id=__nav_1_label tabindex=0> 主页 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_1_label aria-expanded=false> <label class=md-nav__title for=__nav_1> <span class="md-nav__icon md-icon"></span> 主页 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../.. class=md-nav__link> Android10 </a> </li> <li class=md-nav__item> <a href=../Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-nav__link> 环境 </a> </li> <li class=md-nav__item> <a href=../%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class=md-nav__link> 框架 </a> </li> <li class=md-nav__item> <a href=../../Poc/%E9%BB%91%E5%AE%A2%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E4%B8%89%E6%98%9F%E9%A2%84%E8%A3%85%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%9D%A5%E7%9B%91%E8%A7%86%E7%94%A8%E6%88%B7/ class=md-nav__link> 漏洞 </a> </li> <li class=md-nav__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-nav__link> 应用 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_2> <label class=md-nav__link for=__nav_2 id=__nav_2_label tabindex=0> 环境 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_2_label aria-expanded=false> <label class=md-nav__title for=__nav_2> <span class="md-nav__icon md-icon"></span> 环境 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../Android10%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD/ class=md-nav__link> Android10源码下载 </a> </li> <li class=md-nav__item> <a href=../Android%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/ class=md-nav__link> Android基础操作 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--active md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_3 checked> <label class=md-nav__link for=__nav_3 id=__nav_3_label tabindex=0> 框架 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_3_label aria-expanded=true> <label class=md-nav__title for=__nav_3> <span class="md-nav__icon md-icon"></span> 框架 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../%E6%81%A2%E5%A4%8D%E6%A8%A1%E5%BC%8F/ class=md-nav__link> 恢复模式 </a> </li> <li class="md-nav__item md-nav__item--active"> <input class="md-nav__toggle md-toggle" type=checkbox id=__toc> <label class="md-nav__link md-nav__link--active" for=__toc> Android AppActivity 启动流程分析 <span class="md-nav__icon md-icon"></span> </label> <a href=./ class="md-nav__link md-nav__link--active"> Android AppActivity 启动流程分析 </a> <nav class="md-nav md-nav--secondary" aria-label=目录> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> 目录 </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#1-launcher-ams class=md-nav__link> 1. Launcher —— AMS </a> <nav class=md-nav aria-label="1. Launcher —— AMS"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#11 class=md-nav__link> 1.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#111-launcheronclick class=md-nav__link> 1.1.1 Launcher.onClick </a> </li> <li class=md-nav__item> <a href=#112-launcheronclickappshortcut class=md-nav__link> 1.1.2 Launcher.onClickAppShortcut </a> </li> <li class=md-nav__item> <a href=#113-launcherstartactivity class=md-nav__link> 1.1.3 Launcher.startActivity </a> </li> <li class=md-nav__item> <a href=#114-activitystartactivity class=md-nav__link> 1.1.4 Activity.startActivity </a> </li> <li class=md-nav__item> <a href=#115-activitystartactivityforresult class=md-nav__link> 1.1.5 Activity.startActivityForResult </a> </li> <li class=md-nav__item> <a href=#116-instrumentationexecstartactivity class=md-nav__link> 1.1.6 Instrumentation.execStartActivity </a> </li> <li class=md-nav__item> <a href=#117-activitymanagerproxystartactivity class=md-nav__link> 1.1.7 ActivityManagerProxy.startActivity </a> </li> <li class=md-nav__item> <a href=#118-activitymanagerservicestartactivity class=md-nav__link> 1.1.8 ActivityManagerService.startActivity </a> </li> <li class=md-nav__item> <a href=#12 class=md-nav__link> 1.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#2-ams-zygote class=md-nav__link> 2. AMS —— zygote </a> <nav class=md-nav aria-label="2. AMS —— zygote"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#21 class=md-nav__link> 2.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#211-activitymanagerservicestartactivityasuser class=md-nav__link> 2.1.1 ActivityManagerService.startActivityAsUser </a> </li> <li class=md-nav__item> <a href=#212-activitystarterstartactivitymaywait class=md-nav__link> 2.1.2 ActivityStarter.startActivityMayWait </a> </li> <li class=md-nav__item> <a href=#213-activitystarterstartactivitylocked class=md-nav__link> 2.1.3 ActivityStarter.startActivityLocked </a> </li> <li class=md-nav__item> <a href=#214-activitystarterdopendingactivitylauncheslocked class=md-nav__link> 2.1.4 ActivityStarter.doPendingActivityLaunchesLocked </a> </li> <li class=md-nav__item> <a href=#215-activitystarterstartactivityunchecked class=md-nav__link> 2.1.5 ActivityStarter.startActivityUnchecked </a> </li> <li class=md-nav__item> <a href=#216-activitystacksupervisorresumefocusedstacktopactivitylocked class=md-nav__link> 2.1.6 ActivityStackSupervisor.resumeFocusedStackTopActivityLocked </a> </li> <li class=md-nav__item> <a href=#217-activitystackresumetopactivityuncheckedlocked class=md-nav__link> 2.1.7 ActivityStack.resumeTopActivityUncheckedLocked </a> </li> <li class=md-nav__item> <a href=#218-activitystackresumetopactivityinnerlocked class=md-nav__link> 2.1.8 ActivityStack.resumeTopActivityInnerLocked </a> </li> <li class=md-nav__item> <a href=#219-activitystacksupervisorstartspecificactivitylocked class=md-nav__link> 2.1.9 ActivityStackSupervisor.startSpecificActivityLocked </a> </li> <li class=md-nav__item> <a href=#2110-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.10 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2111-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.11 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2112-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.12 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2113-processstart class=md-nav__link> 2.1.13 Process.start </a> </li> <li class=md-nav__item> <a href=#2114-processstartviazygote class=md-nav__link> 2.1.14 Process.startViaZygote </a> </li> <li class=md-nav__item> <a href=#2115-processzygotesendargsandgetresultprocessopenzygotesocketifneeded class=md-nav__link> 2.1.15 Process.zygoteSendArgsAndGetResult、Process.openZygoteSocketIfNeeded </a> </li> <li class=md-nav__item> <a href=#22 class=md-nav__link> 2.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#3-zygote-activitythread class=md-nav__link> 3. zygote —— ActivityThread </a> <nav class=md-nav aria-label="3. zygote —— ActivityThread"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#31 class=md-nav__link> 3.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#311-zygoteinitmain class=md-nav__link> 3.1.1 ZygoteInit.main </a> </li> <li class=md-nav__item> <a href=#312-zygoteinitrunselectloop class=md-nav__link> 3.1.2 ZygoteInit.runSelectLoop </a> </li> <li class=md-nav__item> <a href=#313-zygoteconnectionrunonce class=md-nav__link> 3.1.3 ZygoteConnection.runOnce </a> </li> <li class=md-nav__item> <a href=#314-zygoteconnectionhandlechildproc class=md-nav__link> 3.1.4 ZygoteConnection.handleChildProc </a> </li> <li class=md-nav__item> <a href=#315-runtimeinitzygoteinit class=md-nav__link> 3.1.5 RuntimeInit.zygoteInit </a> </li> <li class=md-nav__item> <a href=#316-runtimeinitapplicationinit class=md-nav__link> 3.1.6 RuntimeInit.applicationInit </a> </li> <li class=md-nav__item> <a href=#317-runtimeinitinvokestaticmain class=md-nav__link> 3.1.7 RuntimeInit.invokeStaticMain </a> </li> <li class=md-nav__item> <a href=#318-methodandargscallerrun class=md-nav__link> 3.1.8 MethodAndArgsCaller.run </a> </li> <li class=md-nav__item> <a href=#319-activitythread-main class=md-nav__link> 3.1.9 ActivityThread .main </a> </li> <li class=md-nav__item> <a href=#32 class=md-nav__link> 3.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#4-activitythread-activity class=md-nav__link> 4. ActivityThread —— Activity </a> <nav class=md-nav aria-label="4. ActivityThread —— Activity"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#41 class=md-nav__link> 4.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#411-activitythreadattach class=md-nav__link> 4.1.1 ActivityThread.attach </a> </li> <li class=md-nav__item> <a href=#412-activitymanagerproxyattachapplication class=md-nav__link> 4.1.2 ActivityManagerProxy.attachApplication </a> </li> <li class=md-nav__item> <a href=#413-activitymanagernativeontransact class=md-nav__link> 4.1.3 ActivityManagerNative.onTransact </a> </li> <li class=md-nav__item> <a href=#414-activitymanagerserviceattachapplication class=md-nav__link> 4.1.4 ActivityManagerService.attachApplication </a> </li> <li class=md-nav__item> <a href=#415-activitymanagerserviceattachapplicationlocked class=md-nav__link> 4.1.5 ActivityManagerService.attachApplicationLocked </a> </li> <li class=md-nav__item> <a href=#4151-activitythreadjavaapplicationthreadbindapplication class=md-nav__link> 4.1.5.1 ActivityThread.java::ApplicationThread.bindApplication </a> </li> <li class=md-nav__item> <a href=#4152-activitystacksupervisorattachapplicationlocked class=md-nav__link> 4.1.5.2 ActivityStackSupervisor.attachApplicationLocked </a> </li> <li class=md-nav__item> <a href=#41521-activitystacksupervisorrealstartactivitylocked class=md-nav__link> 4.1.5.2.1 ActivityStackSupervisor.realStartActivityLocked </a> </li> <li class=md-nav__item> <a href=#41522-applicationthreadschedulelaunchactivity class=md-nav__link> 4.1.5.2.2 ApplicationThread.scheduleLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41523-activitythreadhandlelaunchactivity class=md-nav__link> 4.1.5.2.3 ActivityThread.handleLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41424-applicationthreadperformlaunchactivity class=md-nav__link> 4.1.4.2.4 ApplicationThread.performLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41525-instrumentationcallactivityoncreate class=md-nav__link> 4.1.5.2.5 Instrumentation.callActivityOnCreate </a> </li> <li class=md-nav__item> <a href=#41526-activityperformcreate class=md-nav__link> 4.1.5.2.6 Activity.performCreate </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#42 class=md-nav__link> 4.2 小结 </a> </li> <li class=md-nav__item> <a href=#5 class=md-nav__link> 5. 总结 </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_4> <label class=md-nav__link for=__nav_4 id=__nav_4_label tabindex=0> 漏洞 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_4_label aria-expanded=false> <label class=md-nav__title for=__nav_4> <span class="md-nav__icon md-icon"></span> 漏洞 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../Poc/%E9%BB%91%E5%AE%A2%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E4%B8%89%E6%98%9F%E9%A2%84%E8%A3%85%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%9D%A5%E7%9B%91%E8%A7%86%E7%94%A8%E6%88%B7/ class=md-nav__link> 黑客可以利用三星预装的应用程序来监视用户 </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_5> <label class=md-nav__link for=__nav_5 id=__nav_5_label tabindex=0> 应用 <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_5_label aria-expanded=false> <label class=md-nav__title for=__nav_5> <span class="md-nav__icon md-icon"></span> 应用 </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../App/android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/ class=md-nav__link> Android内存泄露优化总结 </a> </li> </ul> </nav> </li> </ul> </nav> </div> </div> </div> <div class="md-sidebar md-sidebar--secondary" data-md-component=sidebar data-md-type=toc> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--secondary" aria-label=目录> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> 目录 </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#1-launcher-ams class=md-nav__link> 1. Launcher —— AMS </a> <nav class=md-nav aria-label="1. Launcher —— AMS"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#11 class=md-nav__link> 1.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#111-launcheronclick class=md-nav__link> 1.1.1 Launcher.onClick </a> </li> <li class=md-nav__item> <a href=#112-launcheronclickappshortcut class=md-nav__link> 1.1.2 Launcher.onClickAppShortcut </a> </li> <li class=md-nav__item> <a href=#113-launcherstartactivity class=md-nav__link> 1.1.3 Launcher.startActivity </a> </li> <li class=md-nav__item> <a href=#114-activitystartactivity class=md-nav__link> 1.1.4 Activity.startActivity </a> </li> <li class=md-nav__item> <a href=#115-activitystartactivityforresult class=md-nav__link> 1.1.5 Activity.startActivityForResult </a> </li> <li class=md-nav__item> <a href=#116-instrumentationexecstartactivity class=md-nav__link> 1.1.6 Instrumentation.execStartActivity </a> </li> <li class=md-nav__item> <a href=#117-activitymanagerproxystartactivity class=md-nav__link> 1.1.7 ActivityManagerProxy.startActivity </a> </li> <li class=md-nav__item> <a href=#118-activitymanagerservicestartactivity class=md-nav__link> 1.1.8 ActivityManagerService.startActivity </a> </li> <li class=md-nav__item> <a href=#12 class=md-nav__link> 1.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#2-ams-zygote class=md-nav__link> 2. AMS —— zygote </a> <nav class=md-nav aria-label="2. AMS —— zygote"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#21 class=md-nav__link> 2.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#211-activitymanagerservicestartactivityasuser class=md-nav__link> 2.1.1 ActivityManagerService.startActivityAsUser </a> </li> <li class=md-nav__item> <a href=#212-activitystarterstartactivitymaywait class=md-nav__link> 2.1.2 ActivityStarter.startActivityMayWait </a> </li> <li class=md-nav__item> <a href=#213-activitystarterstartactivitylocked class=md-nav__link> 2.1.3 ActivityStarter.startActivityLocked </a> </li> <li class=md-nav__item> <a href=#214-activitystarterdopendingactivitylauncheslocked class=md-nav__link> 2.1.4 ActivityStarter.doPendingActivityLaunchesLocked </a> </li> <li class=md-nav__item> <a href=#215-activitystarterstartactivityunchecked class=md-nav__link> 2.1.5 ActivityStarter.startActivityUnchecked </a> </li> <li class=md-nav__item> <a href=#216-activitystacksupervisorresumefocusedstacktopactivitylocked class=md-nav__link> 2.1.6 ActivityStackSupervisor.resumeFocusedStackTopActivityLocked </a> </li> <li class=md-nav__item> <a href=#217-activitystackresumetopactivityuncheckedlocked class=md-nav__link> 2.1.7 ActivityStack.resumeTopActivityUncheckedLocked </a> </li> <li class=md-nav__item> <a href=#218-activitystackresumetopactivityinnerlocked class=md-nav__link> 2.1.8 ActivityStack.resumeTopActivityInnerLocked </a> </li> <li class=md-nav__item> <a href=#219-activitystacksupervisorstartspecificactivitylocked class=md-nav__link> 2.1.9 ActivityStackSupervisor.startSpecificActivityLocked </a> </li> <li class=md-nav__item> <a href=#2110-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.10 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2111-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.11 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2112-activitymanagerservicestartprocesslocked class=md-nav__link> 2.1.12 ActivityManagerService.startProcessLocked </a> </li> <li class=md-nav__item> <a href=#2113-processstart class=md-nav__link> 2.1.13 Process.start </a> </li> <li class=md-nav__item> <a href=#2114-processstartviazygote class=md-nav__link> 2.1.14 Process.startViaZygote </a> </li> <li class=md-nav__item> <a href=#2115-processzygotesendargsandgetresultprocessopenzygotesocketifneeded class=md-nav__link> 2.1.15 Process.zygoteSendArgsAndGetResult、Process.openZygoteSocketIfNeeded </a> </li> <li class=md-nav__item> <a href=#22 class=md-nav__link> 2.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#3-zygote-activitythread class=md-nav__link> 3. zygote —— ActivityThread </a> <nav class=md-nav aria-label="3. zygote —— ActivityThread"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#31 class=md-nav__link> 3.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#311-zygoteinitmain class=md-nav__link> 3.1.1 ZygoteInit.main </a> </li> <li class=md-nav__item> <a href=#312-zygoteinitrunselectloop class=md-nav__link> 3.1.2 ZygoteInit.runSelectLoop </a> </li> <li class=md-nav__item> <a href=#313-zygoteconnectionrunonce class=md-nav__link> 3.1.3 ZygoteConnection.runOnce </a> </li> <li class=md-nav__item> <a href=#314-zygoteconnectionhandlechildproc class=md-nav__link> 3.1.4 ZygoteConnection.handleChildProc </a> </li> <li class=md-nav__item> <a href=#315-runtimeinitzygoteinit class=md-nav__link> 3.1.5 RuntimeInit.zygoteInit </a> </li> <li class=md-nav__item> <a href=#316-runtimeinitapplicationinit class=md-nav__link> 3.1.6 RuntimeInit.applicationInit </a> </li> <li class=md-nav__item> <a href=#317-runtimeinitinvokestaticmain class=md-nav__link> 3.1.7 RuntimeInit.invokeStaticMain </a> </li> <li class=md-nav__item> <a href=#318-methodandargscallerrun class=md-nav__link> 3.1.8 MethodAndArgsCaller.run </a> </li> <li class=md-nav__item> <a href=#319-activitythread-main class=md-nav__link> 3.1.9 ActivityThread .main </a> </li> <li class=md-nav__item> <a href=#32 class=md-nav__link> 3.2 小结 </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#4-activitythread-activity class=md-nav__link> 4. ActivityThread —— Activity </a> <nav class=md-nav aria-label="4. ActivityThread —— Activity"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#41 class=md-nav__link> 4.1 调用过程分析 </a> </li> <li class=md-nav__item> <a href=#411-activitythreadattach class=md-nav__link> 4.1.1 ActivityThread.attach </a> </li> <li class=md-nav__item> <a href=#412-activitymanagerproxyattachapplication class=md-nav__link> 4.1.2 ActivityManagerProxy.attachApplication </a> </li> <li class=md-nav__item> <a href=#413-activitymanagernativeontransact class=md-nav__link> 4.1.3 ActivityManagerNative.onTransact </a> </li> <li class=md-nav__item> <a href=#414-activitymanagerserviceattachapplication class=md-nav__link> 4.1.4 ActivityManagerService.attachApplication </a> </li> <li class=md-nav__item> <a href=#415-activitymanagerserviceattachapplicationlocked class=md-nav__link> 4.1.5 ActivityManagerService.attachApplicationLocked </a> </li> <li class=md-nav__item> <a href=#4151-activitythreadjavaapplicationthreadbindapplication class=md-nav__link> 4.1.5.1 ActivityThread.java::ApplicationThread.bindApplication </a> </li> <li class=md-nav__item> <a href=#4152-activitystacksupervisorattachapplicationlocked class=md-nav__link> 4.1.5.2 ActivityStackSupervisor.attachApplicationLocked </a> </li> <li class=md-nav__item> <a href=#41521-activitystacksupervisorrealstartactivitylocked class=md-nav__link> 4.1.5.2.1 ActivityStackSupervisor.realStartActivityLocked </a> </li> <li class=md-nav__item> <a href=#41522-applicationthreadschedulelaunchactivity class=md-nav__link> 4.1.5.2.2 ApplicationThread.scheduleLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41523-activitythreadhandlelaunchactivity class=md-nav__link> 4.1.5.2.3 ActivityThread.handleLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41424-applicationthreadperformlaunchactivity class=md-nav__link> 4.1.4.2.4 ApplicationThread.performLaunchActivity </a> </li> <li class=md-nav__item> <a href=#41525-instrumentationcallactivityoncreate class=md-nav__link> 4.1.5.2.5 Instrumentation.callActivityOnCreate </a> </li> <li class=md-nav__item> <a href=#41526-activityperformcreate class=md-nav__link> 4.1.5.2.6 Activity.performCreate </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#42 class=md-nav__link> 4.2 小结 </a> </li> <li class=md-nav__item> <a href=#5 class=md-nav__link> 5. 总结 </a> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <article class="md-content__inner md-typeset"> <h1>Android AppActivity 启动流程分析</h1> <p>AMS(ActivityManagerService) 会启动 Launcher 来展示我们手机中所有已安装的应用图标，点击图标后相应的应用程序将会被系统启动运行并展示在我们面前，那么，点击了图标之后系统道理做了哪些工作呢？应用进程是怎么被启动的呢？Activity 的生命周期是什么时候被谁调用的呢？本文将继续基于 Android Nougat 的 frameworks 层源码的解答这些问题。</p> <p><strong>阅读建议：</strong> 如果你是首次阅读这个过程的源码，建议你忽略一些细枝末节的代码，先抓主干代码，从整体上理解代码的执行流程（右下角文章目录视图中可以点击跳转到相应章节），否则将会被细节的代码扰乱思路。最后可以回头多看几遍，这时候如果有需要可以追踪一些枝干代码，做到融会贯通。</p> <h2 id=1-launcher-ams>1. Launcher —— AMS</h2> <h3 id=11>1.1 调用过程分析</h3> <h3 id=111-launcheronclick>1.1.1 Launcher.onClick</h3> <p>在 Launcher app 的主 Activity —— Launcher.java 中，App 图标的点击事件最终会回调 Launcher.java 中的 onClick 方法，</p> <p><a href=https://android.googlesource.com/platform/packages/apps/Launcher3/+/nougat-release/src/com/android/launcher3/Launcher.java>packages/apps/Launcher3/src/com/android/launcher3/Launcher.java</a>：</p> <pre><code class=language-java>public void onClick(View v) {
+    ...
+    Object tag = v.getTag();
+    if (tag instanceof ShortcutInfo) {
+        // 从快捷方式图标启动
+        onClickAppShortcut(v);
+    } else if (tag instanceof FolderInfo) {
+        // 文件夹
+        if (v instanceof FolderIcon) {
+           onClickFolderIcon(v);
+        }
+    } else if (v == mAllAppsButton) {
+        // “所有应用”按钮
+        onClickAllAppsButton(v);
+    } else if (tag instanceof AppInfo) {
+        // 从“所有应用”中启动的应用
+        startAppShortcutOrInfoActivity(v);
+    } else if (tag instanceof LauncherAppWidgetInfo) {
+        // 组件
+        if (v instanceof PendingAppWidgetHostView) {
+            onClickPendingWidget((PendingAppWidgetHostView) v);
+        }
+    }
+}
+</code></pre> <h3 id=112-launcheronclickappshortcut>1.1.2 Launcher.onClickAppShortcut</h3> <p>如果是快捷方式图标，则调用 onClickAppShortcut 方法进而调用 startAppShortcutOrInfoActivity 方法：</p> <pre><code class=language-java>@Thunk void startAppShortcutOrInfoActivity(View v) {
+    Object tag = v.getTag();
+    final ShortcutInfo shortcut;
+    final Intent intent;
+    if (tag instanceof ShortcutInfo) {
+        shortcut = (ShortcutInfo) tag;
+        // 去除对应的 Intent 对象
+        intent = shortcut.intent;
+        int[] pos = new int[2];
+        v.getLocationOnScreen(pos);
+        intent.setSourceBounds(new Rect(pos[0], pos[1],
+                pos[0] + v.getWidth(), pos[1] + v.getHeight()));
+
+    } else if (tag instanceof AppInfo) {
+        shortcut = null;
+        intent = ((AppInfo) tag).intent;
+    } else {
+        throw new IllegalArgumentException(&quot;Input must be a Shortcut or AppInfo&quot;);
+    }
+
+    // 调用 startActivitySafely 方法
+    boolean success = startActivitySafely(v, intent, tag);
+    mStats.recordLaunch(v, intent, shortcut);
+
+    if (success &amp;&amp; v instanceof BubbleTextView) {
+        mWaitingForResume = (BubbleTextView) v;
+        mWaitingForResume.setStayPressed(true);
+    }
+}
+</code></pre> <h3 id=113-launcherstartactivity>1.1.3 Launcher.startActivity</h3> <p>获取相应 App 的 Intent 信息之后，调用 startActivity 方法：</p> <pre><code class=language-java>private boolean startActivity(View v, Intent intent, Object tag) {
+    // 启动新的任务栈
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    try {
+        ...
+        if (user == null || user.equals(UserHandleCompat.myUserHandle())) {
+            StrictMode.VmPolicy oldPolicy = StrictMode.getVmPolicy();
+            try {            
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+                        .penaltyLog().build());
+                // 调用 Activity 的 startActivity 方法
+                startActivity(intent, optsBundle);
+            } finally {
+                StrictMode.setVmPolicy(oldPolicy);
+            }
+        } else {
+            launcherApps.startActivityForProfile(intent.getComponent(), user,
+                    intent.getSourceBounds(), optsBundle);
+        }
+        return true;
+    } catch (SecurityException e) {      
+        ...
+    }
+    return false;
+}
+</code></pre> <h3 id=114-activitystartactivity>1.1.4 Activity.startActivity</h3> <p>这里最终调用了 Activity 中的 startActivity 方法，并且设置 Flag 为 FLAG_ACTIVITY_NEW_TASK。到此为止，已经跟启动普通的 Activity 流程汇合起来了，继续往下分析。</p> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/app/Activity.java>frameworks/base/core/java/android/app/Activity.java</a>：</p> <pre><code class=language-java>@Override
+public void startActivity(Intent intent, @Nullable Bundle options) {
+    // 第二个参数为 -1 表示不需要回调 onActivityResult 方法
+    if (options != null) {
+        startActivityForResult(intent, -1, options);
+    } else {
+        // Note we want to go through this call for compatibility with
+        // applications that may have overridden the method.
+        startActivityForResult(intent, -1);
+    }
+}
+</code></pre> <h3 id=115-activitystartactivityforresult>1.1.5 Activity.startActivityForResult</h3> <p>调用 Activity 的 startActivityForResult 方法</p> <pre><code class=language-java>public void startActivityForResult(@RequiresPermission Intent intent, int requestCode,
+           @Nullable Bundle options) {
+    // mParent 是当前 Activity 的父类，此时条件成立
+    if (mParent == null) {
+        // 调用 Instrumentation 的 execStartActivity 方法
+        Instrumentation.ActivityResult ar = mInstrumentation.execStartActivity(this,
+               mMainThread.getApplicationThread(), mToken, this, intent, requestCode, options);
+        ...
+    } else {
+        ...
+    }
+}
+</code></pre> <h3 id=116-instrumentationexecstartactivity>1.1.6 Instrumentation.execStartActivity</h3> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/app/Instrumentation.java>frameworks/base/core/java/android/app/Instrumentation.java</a>：</p> <pre><code class=language-java>public ActivityResult execStartActivity(
+        Context who, IBinder contextThread, IBinder token, Activity target,
+        Intent intent, int requestCode, Bundle options) {
+        ...
+    try {
+        intent.migrateExtraStreamToClipData();
+        intent.prepareToLeaveProcess(who);
+        // 获取 AMS 的代理对象并调用其 startActivity 方法
+        int result = ActivityManagerNative.getDefault()
+            .startActivity(whoThread, who.getBasePackageName(), intent,
+                    intent.resolveTypeIfNeeded(who.getContentResolver()),
+                    token, target != null ? target.mEmbeddedID : null,
+                    requestCode, 0, null, options);
+        checkStartActivityResult(result, intent);
+    } catch (RemoteException e) {
+        throw new RuntimeException(&quot;Failure from system&quot;, e);
+    }
+    return null;
+}
+</code></pre> <h3 id=117-activitymanagerproxystartactivity>1.1.7 ActivityManagerProxy.startActivity</h3> <p>以上过程是在 Launcher App 所在的进程中发生的，在我的另外一篇文章</p> <p>中我们分析了 AIDL 的实现过程，由于远程 Service 跟使用 Service 的 Activity 不在同一个进程中，因此他们之间交互需要通过 Binder IPC 机制的支持，在这个过程中Client 首先获取到 Server 端的代理对象，在 Client 看来 Server 代理对象同样具有 Server 本地对象承诺的能力，因此 Client 可以调用 Server 代理对象跟 Sever 本地对象进行数据交互，Binder 驱动作为桥梁在他们中间起到中间人的作用。</p> <p>在<a href=https://guanpj.cn/2017/09/17/Android-System-Startup-Flow-Analyze/ >Android 系统启动流程分析</a>中曾经分析过，AMS 是运行在 system_server 线程中的，这时 AMS 就相当于 AIDL 中的远程 Service，App 进程要与 AMS 交互，需要通过 AMS 的代理对象 AMP(ActivityManagerProxy) 来完成，来看 ActivityManagerNative.getDefault() 拿到的是什么：</p> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/app/ActivityManagerNative.java>frameworks/base/core/java/android/app/ActivityManagerNative.java</a>：</p> <pre><code class=language-java>static public IActivityManager getDefault() {
+    return gDefault.get();
+}
+</code></pre> <p>getDefault 是一个静态变量：</p> <pre><code class=language-java>private static final Singleton&lt;IActivityManager&gt; gDefault = new Singleton&lt;IActivityManager&gt;() {
+    protected IActivityManager create() {
+        // 向 ServiceManager 查询一个 key 为 &quot;activity&quot; 的引用
+        IBinder b = ServiceManager.getService(&quot;activity&quot;);
+        if (false) {
+            Log.v(&quot;ActivityManager&quot;, &quot;default service binder = &quot; + b);
+        }
+        IActivityManager am = asInterface(b);
+        if (false) {
+            Log.v(&quot;ActivityManager&quot;, &quot;default service = &quot; + am);
+        }
+        return am;
+    }
+};
+</code></pre> <p>同样，在文章</p> <p>中也讲到过：</p> <blockquote> <p>ServiceManager 是 Binder IPC 通信过程的核心，是上下文的管理者，Binder 服务端必须先向 ServerManager 注册才能够为客户端提供服务，Binder 客户端在与服务端通信之前需要从 ServerManager 中查找并获取 Binder 服务端的引用。 </p> </blockquote> <p>这里通过 "activity" 这个名字向 ServiceManager 查询 AMS 的引用，获取 AMS 的引用后，调用 asInterface 方法：</p> <pre><code class=language-java>static public IActivityManager asInterface(IBinder obj) {
+    if (obj == null) {
+        return null;
+    }
+    // 根据 descriptor 查询 obj 是否为 Binder 本地对象，具体过程请看前文中提到的文章
+    IActivityManager in = (IActivityManager)obj.queryLocalInterface(descriptor);
+    if (in != null) {
+        return in;
+    }
+    // 如果 obj 不是 Binder 本地对象，则将其包装成代理对象并返回
+    return new ActivityManagerProxy(obj);
+}
+</code></pre> <p>因为 AMS 与 Launcher App 不在同一个进程中，这里返回的 IBinder 对象是一个 Binder 代理对象，因此这类将其包装成 AMP(ActivityManagerProxy) 对象并返回，AMP 是 AMN(ActivityManagerNative) 的内部类，查看 AMP 类 ：</p> <pre><code class=language-java>class ActivityManagerProxy implements IActivityManager
+{
+    public ActivityManagerProxy(IBinder remote)
+    {
+        mRemote = remote;
+    }
+
+    public IBinder asBinder()
+    {
+        return mRemote;
+    }
+
+    public int startActivity(IApplicationThread caller, String callingPackage, Intent intent,
+            String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+            int startFlags, ProfilerInfo profilerInfo, Bundle options) throws RemoteException {
+        ...
+        // 调用号为 START_ACTIVITY_TRANSACTION
+        mRemote.transact(START_ACTIVITY_TRANSACTION, data, reply, 0);
+        reply.readException();
+        int result = reply.readInt();
+        reply.recycle();
+        data.recycle();
+        return result;
+    }
+    ...
+    public ComponentName startService(IApplicationThread caller, Intent service,
+            String resolvedType, String callingPackage, int userId) throws RemoteException
+    {
+        ...
+        mRemote.transact(START_SERVICE_TRANSACTION, data, reply, 0);
+        reply.readException();
+        ComponentName res = ComponentName.readFromParcel(reply);
+        data.recycle();
+        reply.recycle();
+        return res;
+    }
+    ...
+}
+</code></pre> <p>可以看到，AMP 里面将客户端的请求通过 mRemote.transact 进行转发，mRemote 对象正是 Binder 驱动返回来的 Binder Proxy 对象，通过 Binder Proxy，Binder 驱动最终将调用处于 Binder Server 端 AMN 中的 onTransact 方法：</p> <pre><code class=language-java>@Override
+public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+    // 根据方法调用号 code 决定调用哪个方法
+    switch (code) {
+    case START_ACTIVITY_TRANSACTION:
+    {
+        ...
+        // 调用 startActivity 方法
+        int result = startActivity(app, callingPackage, intent, resolvedType,
+                resultTo, resultWho, requestCode, startFlags, profilerInfo, options);
+        reply.writeNoException();
+        reply.writeInt(result);
+        return true;
+    }
+    ...
+    case START_SERVICE_TRANSACTION: {
+        ...
+        ComponentName cn = startService(app, service, resolvedType, callingPackage, userId);
+            reply.writeNoException();
+            ComponentName.writeToParcel(cn, reply);
+            return true;
+        }
+        ...
+    }
+}
+</code></pre> <h3 id=118-activitymanagerservicestartactivity>1.1.8 ActivityManagerService.startActivity</h3> <p>AMN 是一个抽象类，它的 startActivity 为抽象方法，具体的实现在 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/services/core/java/com/android/server/am/ActivityManagerService.java>frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java</a> 中：</p> <pre><code class=language-java>@Override
+public final int startActivity(IApplicationThread caller, String callingPackage,
+        Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+        int startFlags, ProfilerInfo profilerInfo, Bundle bOptions) {
+    return startActivityAsUser(caller, callingPackage, intent, resolvedType, resultTo,
+            resultWho, requestCode, startFlags, profilerInfo, bOptions,
+            UserHandle.getCallingUserId());
+}
+</code></pre> <h3 id=12>1.2 小结</h3> <p>从 Launcher App 到 AMS 的调用过程中使用了 Binder IPC 机制，如果你已经看了上面提到的我之前写的两篇文章——<a href=https://guanpj.cn/2017/08/10/Android-Binder-Principle-Analyze/ >借助 AIDL 理解 Android Binder 机制——Binder 来龙去脉</a>和<a href=https://guanpj.cn/2017/08/13/Android-Binder-Apply/ >借助 AIDL 理解 Android Binder 机制——AIDL 的使用和原理分析</a>，并且运行了文章中使用到的 <a href=https://github.com/guanpj/BinderDemo>Demo</a>，你应该可以发现，相对于 AIDL 的调用过程，调用方 Launcher App 相当于 AIDL 过程中的 Activity 所在的 App，充当 Clinent 的角色；AMS 相当于远程 Service 的角色，充当 Server 端角色，他们的调用过程总体上都是一样的。</p> <p>从 Launcher App 到 AMS 的时序图如下：</p> <p><img alt src=https://pic4.zhimg.com/v2-50d1f49f757dd9c35bf4b48dd654d8cb_b.jpg></p> <h2 id=2-ams-zygote>2. AMS —— zygote</h2> <h3 id=21>2.1 调用过程分析</h3> <h3 id=211-activitymanagerservicestartactivityasuser>2.1.1 ActivityManagerService.startActivityAsUser</h3> <p>接着从 AMS 的 startActivityAsUser 方法开始分析：</p> <pre><code class=language-java>@Override
+public final int startActivityAsUser(IApplicationThread caller, String callingPackage,
+        Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+        int startFlags, ProfilerInfo profilerInfo, Bundle bOptions, int userId) {
+    enforceNotIsolatedCaller(&quot;startActivity&quot;);
+    userId = mUserController.handleIncomingUser(Binder.getCallingPid(), Binder.getCallingUid(),
+                userId, false, ALLOW_FULL_ONLY, &quot;startActivity&quot;, null);
+    // TODO: Switch to user app stacks here.
+    // 调用 ActivityStarter 的 startActivityMayWait 方法
+    return mActivityStarter.startActivityMayWait(caller, -1, callingPackage, intent,
+            resolvedType, null, null, resultTo, resultWho, requestCode, startFlags,
+            profilerInfo, null, null, bOptions, false, userId, null, null);
+}
+</code></pre> <h3 id=212-activitystarterstartactivitymaywait>2.1.2 ActivityStarter.startActivityMayWait</h3> <p>继续跟进 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/services/core/java/com/android/server/am/ActivityStarter.java>frameworks/base/services/core/java/com/android/server/am/ActivityStarter.java</a>：</p> <pre><code class=language-java>final int startActivityMayWait(IApplicationThread caller, int callingUid,
+        String callingPackage, Intent intent, String resolvedType,
+        IVoiceInteractionSession voiceSession, IVoiceInteractor voiceInteractor,
+        IBinder resultTo, String resultWho, int requestCode, int startFlags,
+        ProfilerInfo profilerInfo, IActivityManager.WaitResult outResult, Configuration config,
+        Bundle bOptions, boolean ignoreTargetSecurity, int userId,
+        IActivityContainer iContainer, TaskRecord inTask) {
+   ...
+   synchronized (mService) {
+        ...
+        // 调用 startActivityLocked 方法
+        int res = startActivityLocked(caller, intent, ephemeralIntent, resolvedType,
+                aInfo, rInfo, voiceSession, voiceInteractor,
+                resultTo, resultWho, requestCode, callingPid,
+                callingUid, callingPackage, realCallingPid, realCallingUid, startFlags,
+                options, ignoreTargetSecurity, componentSpecified, outRecord, container,
+                inTask);
+        ...
+        return res;
+    }
+}
+</code></pre> <h3 id=213-activitystarterstartactivitylocked>2.1.3 ActivityStarter.startActivityLocked</h3> <p>查看 startActivityLocked 方法：</p> <pre><code class=language-java>final int startActivityLocked(IApplicationThread caller, Intent intent, Intent ephemeralIntent,
+        String resolvedType, ActivityInfo aInfo, ResolveInfo rInfo,
+        IVoiceInteractionSession voiceSession, IVoiceInteractor voiceInteractor,
+        IBinder resultTo, String resultWho, int requestCode, int callingPid, int callingUid,
+        String callingPackage, int realCallingPid, int realCallingUid, int startFlags,
+        ActivityOptions options, boolean ignoreTargetSecurity, boolean componentSpecified,
+        ActivityRecord[] outActivity, ActivityStackSupervisor.ActivityContainer container,
+        TaskRecord inTask) {
+    ...
+    // 调用 doPendingActivityLaunchesLocked 方法，传入 false 参数
+    doPendingActivityLaunchesLocked(false);
+    ...
+    return err;
+}
+</code></pre> <h3 id=214-activitystarterdopendingactivitylauncheslocked>2.1.4 ActivityStarter.doPendingActivityLaunchesLocked</h3> <p>查看 doPendingActivityLaunchesLocked 方法：</p> <pre><code class=language-java>final void doPendingActivityLaunchesLocked(boolean doResume) {
+    while (!mPendingActivityLaunches.isEmpty()) {
+        final PendingActivityLaunch pal = mPendingActivityLaunches.remove(0);
+        final boolean resume = doResume &amp;&amp; mPendingActivityLaunches.isEmpty();
+        try {
+            // 调用 startActivityUnchecked 方法
+            final int result = startActivityUnchecked(pal.r, pal.sourceRecord, null, null,
+                pal.startFlags, resume, null, null);
+            postStartActivityUncheckedProcessing(pal.r, result, mSupervisor.mFocusedStack.mStackId, 
+                mSourceRecord, mTargetStack);
+        } catch (Exception e) {
+            Slog.e(TAG, &quot;Exception during pending activity launch pal=&quot; + pal, e);
+            pal.sendErrorResult(e.getMessage());
+        }
+    }
+}
+</code></pre> <h3 id=215-activitystarterstartactivityunchecked>2.1.5 ActivityStarter.startActivityUnchecked</h3> <p>查看 startActivityUnchecked 方法：</p> <pre><code class=language-java>private int startActivityUnchecked(final ActivityRecord r, ActivityRecord sourceRecord,
+        IVoiceInteractionSession voiceSession, IVoiceInteractor voiceInteractor,
+        int startFlags, boolean doResume, ActivityOptions options, TaskRecord inTask) {
+    ...  
+    // 调用 ActivityStackSupervisor 的 resumeFocusedStackTopActivityLocked 方法
+    mSupervisor.resumeFocusedStackTopActivityLocked();  
+    ... 
+    return START_SUCCESS;
+}
+</code></pre> <h3 id=216-activitystacksupervisorresumefocusedstacktopactivitylocked>2.1.6 ActivityStackSupervisor.resumeFocusedStackTopActivityLocked</h3> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/services/core/java/com/android/server/am/ActivityStackSupervisor.java>frameworks/base/services/core/java/com/android/server/am/ActivityStackSupervisor.java</a>：</p> <pre><code class=language-java>boolean resumeFocusedStackTopActivityLocked(ActivityStack targetStack, ActivityRecord target,
+            ActivityOptions targetOptions) {
+    if (targetStack != null &amp;&amp; isFocusedStack(targetStack)) {
+        return targetStack.resumeTopActivityUncheckedLocked(target, targetOptions);
+    }
+    final ActivityRecord r = mFocusedStack.topRunningActivityLocked();
+    if (r == null || r.state != RESUMED) {
+        // 调用 ActivityStack 的 resumeTopActivityUncheckedLocked 方法
+        mFocusedStack.resumeTopActivityUncheckedLocked(null, null);
+    }
+    return false;
+}
+</code></pre> <h3 id=217-activitystackresumetopactivityuncheckedlocked>2.1.7 ActivityStack.resumeTopActivityUncheckedLocked</h3> <p>查看 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/services/core/java/com/android/server/am/ActivityStack.java>ActivityStack</a> 的 resumeTopActivityUncheckedLocked 方法：</p> <pre><code class=language-java>boolean resumeTopActivityUncheckedLocked(ActivityRecord prev, ActivityOptions options) {
+    ...
+    try {
+        ...
+        // 调用 resumeTopActivityInnerLocked 方法
+        result = resumeTopActivityInnerLocked(prev, options);
+    } finally {
+        mStackSupervisor.inResumeTopActivity = false;
+    }
+    return result;
+}
+</code></pre> <h3 id=218-activitystackresumetopactivityinnerlocked>2.1.8 ActivityStack.resumeTopActivityInnerLocked</h3> <p>查看 resumeTopActivityInnerLocked 方法：</p> <pre><code class=language-java>private boolean resumeTopActivityInnerLocked(ActivityRecord prev, ActivityOptions options) {
+    ...
+    final ActivityRecord next = topRunningActivityLocked();
+    ...
+    if (next.app != null &amp;&amp; next.app.thread != null) {
+        ...
+    } else {
+        ...
+        if (DEBUG_STATES) Slog.d(TAG_STATES, &quot;resumeTopActivityLocked: Restarting &quot; + next);
+        // 调用 ActivityStackSupervisor 的 startSpecificActivityLocked 方法
+        mStackSupervisor.startSpecificActivityLocked(next, true, true);
+    }
+
+    if (DEBUG_STACK) mStackSupervisor.validateTopActivitiesLocked();
+    return true;
+}
+</code></pre> <h3 id=219-activitystacksupervisorstartspecificactivitylocked>2.1.9 ActivityStackSupervisor.startSpecificActivityLocked</h3> <p>回到 ActivityStackSupervisor 的 startSpecificActivityLocked 方法：</p> <pre><code class=language-java>void startSpecificActivityLocked(ActivityRecord r, boolean andResume, boolean checkConfig) {
+    // 当前 Activity 附属的 Application
+    ProcessRecord app = mService.getProcessRecordLocked(r.processName,
+            r.info.applicationInfo.uid, true);
+    r.task.stack.setLaunchTime(r);
+    // 如果 Application 已经运行
+    if (app != null &amp;&amp; app.thread != null) {
+        try {
+            if ((r.info.flags&amp;ActivityInfo.FLAG_MULTIPROCESS) == 0
+                    || !&quot;android&quot;.equals(r.info.packageName)) {
+                app.addPackage(r.info.packageName, r.info.applicationInfo.versionCode,
+                        mService.mProcessStats);
+            }
+            realStartActivityLocked(r, app, andResume, checkConfig);
+            return;
+        } catch (RemoteException e) {
+            Slog.w(TAG, &quot;Exception when starting activity &quot;
+                    + r.intent.getComponent().flattenToShortString(), e);
+        }
+    }
+    // 启动新进程
+    mService.startProcessLocked(r.processName, r.info.applicationInfo, true, 0,
+            &quot;activity&quot;, r.intent.getComponent(), false, false, true);
+}
+</code></pre> <p>首先，在方法中获取了当前 Activity 附属的 Application，如果已经在运行了，说明这个 App 是已经被启动过了的，这时候调用 <strong>realStartActivityLocked</strong> 方法就可以进入下一步的流程了，同一个 App 中不同 Activity 的相互启动就是走的这个流程。当 Application 没有运行的时候，就需要调用 AMS 的 startProcessLocked 方法启动一个进程去承载它然后完成后续的工作，顺便铺垫一下，当新进程被启动完成后还会调用回到这个方法，查看 AMS 的 startProcessLocked 方法：</p> <h3 id=2110-activitymanagerservicestartprocesslocked>2.1.10 ActivityManagerService.startProcessLocked</h3> <pre><code class=language-java>final ProcessRecord startProcessLocked(String processName,
+        ApplicationInfo info, boolean knownToBeDead, int intentFlags,
+        String hostingType, ComponentName hostingName, boolean allowWhileBooting,
+        boolean isolated, boolean keepIfLarge) {
+    return startProcessLocked(processName, info, knownToBeDead, intentFlags, hostingType,
+            hostingName, allowWhileBooting, isolated, 0 /* isolatedUid */, keepIfLarge,
+            null /* ABI override */, null /* entryPoint */, null /* entryPointArgs */,
+            null /* crashHandler */);
+}
+</code></pre> <h3 id=2111-activitymanagerservicestartprocesslocked>2.1.11 ActivityManagerService.startProcessLocked</h3> <p>调用 startProcessLocked 方法：</p> <pre><code class=language-java>final ProcessRecord startProcessLocked(String processName, ApplicationInfo info,
+        boolean knownToBeDead, int intentFlags, String hostingType, ComponentName hostingName,
+        boolean allowWhileBooting, boolean isolated, int isolatedUid, boolean keepIfLarge,
+        String abiOverride, String entryPoint, String[] entryPointArgs, Runnable crashHandler){
+    ...
+    startProcessLocked(app, hostingType, hostingNameStr, abiOverride, entryPoint, entryPointArgs);
+    checkTime(startTime, &quot;startProcess: done starting proc!&quot;);
+    return (app.pid != 0) ? app : null;
+}
+</code></pre> <h3 id=2112-activitymanagerservicestartprocesslocked>2.1.12 ActivityManagerService.startProcessLocked</h3> <p>调用 startProcessLocked 的重载方法：</p> <pre><code class=language-java>private final void startProcessLocked(ProcessRecord app, String hostingType,
+        String hostingNameStr, String abiOverride, String entryPoint, String[] entryPointArgs){
+    ...
+    try {
+        ...
+        // 调用 Process 的 start 方法
+        Process.ProcessStartResult startResult = Process.start(entryPoint,
+                app.processName, uid, uid, gids, debugFlags, mountExternal,
+                app.info.targetSdkVersion, app.info.seinfo, requiredAbi, instructionSet,
+                app.info.dataDir, entryPointArgs);
+        ...
+    } catch (RuntimeException e) {
+        ...
+    }
+}
+</code></pre> <h3 id=2113-processstart>2.1.13 Process.start</h3> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/os/Process.java>frameworks/base/services/core/java/android/os/Process.java</a>：</p> <pre><code class=language-java>public static final ProcessStartResult start(final String processClass,
+                                final String niceName,
+                                int uid, int gid, int[] gids,
+                                int debugFlags, int mountExternal,
+                                int targetSdkVersion,
+                                String seInfo,
+                                String abi,
+                                String instructionSet,
+                                String appDataDir,
+                                String[] zygoteArgs) {
+    try {
+        // 调用 startViaZygote 方法
+        return startViaZygote(processClass, niceName, uid, gid, gids,
+                debugFlags, mountExternal, targetSdkVersion, seInfo,
+                abi, instructionSet, appDataDir, zygoteArgs);
+    } catch (ZygoteStartFailedEx ex) {
+        Log.e(LOG_TAG,
+                &quot;Starting VM process through Zygote failed&quot;);
+        throw new RuntimeException(
+                &quot;Starting VM process through Zygote failed&quot;, ex);
+    }
+}
+</code></pre> <h3 id=2114-processstartviazygote>2.1.14 Process.startViaZygote</h3> <p>查看 startViaZygote 方法：</p> <pre><code class=language-java>private static ProcessStartResult startViaZygote(final String processClass,
+                                final String niceName,
+                                final int uid, final int gid,
+                                final int[] gids,
+                                int debugFlags, int mountExternal,
+                                int targetSdkVersion,
+                                String seInfo,
+                                String abi,
+                                String instructionSet,
+                                String appDataDir,
+                                String[] extraArgs)
+                                throws ZygoteStartFailedEx {
+    synchronized(Process.class) {
+        ...
+        // 调用 zygoteSendArgsAndGetResult 方法，传入 openZygoteSocketIfNeeded 的返回值
+        return zygoteSendArgsAndGetResult(openZygoteSocketIfNeeded(abi), argsForZygote);
+    }
+}
+</code></pre> <h3 id=2115-processzygotesendargsandgetresultprocessopenzygotesocketifneeded>2.1.15 Process.zygoteSendArgsAndGetResult、Process.openZygoteSocketIfNeeded</h3> <p>查看 zygoteSendArgsAndGetResult 方法：</p> <pre><code class=language-java>private static ProcessStartResult zygoteSendArgsAndGetResult(
+            ZygoteState zygoteState, ArrayList&lt;String&gt; args)
+            throws ZygoteStartFailedEx {
+    try {
+        ...
+        final BufferedWriter writer = zygoteState.writer;
+        final DataInputStream inputStream = zygoteState.inputStream;
+
+        writer.write(Integer.toString(args.size()));
+        writer.newLine();
+
+        for (int i = 0; i &lt; sz; i++) {
+            String arg = args.get(i);
+            writer.write(arg);
+            writer.newLine();
+        }
+
+        writer.flush();
+
+        // Should there be a timeout on this?
+        ProcessStartResult result = new ProcessStartResult();
+
+        // 等待 socket 服务端（即zygote）返回新创建的进程pid;
+        result.pid = inputStream.readInt();
+        result.usingWrapper = inputStream.readBoolean();
+
+        if (result.pid &lt; 0) {
+            throw new ZygoteStartFailedEx(&quot;fork() failed&quot;);
+        }
+        return result;
+    } catch (IOException ex) {
+        zygoteState.close();
+        throw new ZygoteStartFailedEx(ex);
+    }
+}
+</code></pre> <p>在 zygoteSendArgsAndGetResult 中等待 Socket 服务端，也就是 zygote 进程返回创建新进程的结果，这里 zygoteState 参数是由 openZygoteSocketIfNeeded 方法返回的，openZygoteSocketIfNeeded 方法则负责根据 abi 向 Zygote 进程发起连接请求：</p> <pre><code class=language-java>private static ZygoteState openZygoteSocketIfNeeded(String abi) throws ZygoteStartFailedEx {
+    if (primaryZygoteState == null || primaryZygoteState.isClosed()) {
+        try {
+            // 向主zygote发起connect()操作
+            primaryZygoteState = ZygoteState.connect(ZYGOTE_SOCKET);
+        } catch (IOException ioe) {
+            throw new ZygoteStartFailedEx(&quot;Error connecting to primary zygote&quot;, ioe);
+        }
+    }
+
+    if (primaryZygoteState.matches(abi)) {
+        return primaryZygoteState;
+    }
+
+    if (secondaryZygoteState == null || secondaryZygoteState.isClosed()) {
+        try {
+            // 当主zygote没能匹配成功，则采用第二个zygote，发起connect()操作
+            secondaryZygoteState = ZygoteState.connect(SECONDARY_ZYGOTE_SOCKET);
+        } catch (IOException ioe) {
+            throw new ZygoteStartFailedEx(&quot;Error connecting to secondary zygote&quot;, ioe);
+        }
+    }
+
+    if (secondaryZygoteState.matches(abi)) {
+        return secondaryZygoteState;
+    }
+
+    throw new ZygoteStartFailedEx(&quot;Unsupported zygote ABI: &quot; + abi);
+}
+</code></pre> <h3 id=22>2.2 小结</h3> <p>如果是从桌面新启动一个 App 中的 Activity，此时是没有进程去承载这个 App 的，因此需要通过 AMS 向 zygote 继承发起请求去完成这个任务，AMS 运行在 system_server 进程中，它通过 Socket 向 zygote 发起 fock 进程的请求，从 AMS 开始的调用时序图如下：</p> <p><img alt src=https://pic4.zhimg.com/v2-2ce49d58480de90c661e00d2bc27840b_b.jpg></p> <h2 id=3-zygote-activitythread>3. zygote —— ActivityThread</h2> <h3 id=31>3.1 调用过程分析</h3> <h3 id=311-zygoteinitmain>3.1.1 ZygoteInit.main</h3> <p>在 <a href=https://guanpj.cn/2017/09/17/Android-System-Startup-Flow-Analyze/ >Android 系统启动流程分析</a> 文中提到过 zygote 进程的其中一项任务就是：</p> <blockquote> <p>调用 registerZygoteSocket() 函数建立 Socket 通道，使 zygote 进程成为 Socket 服务端，并通过 runSelectLoop() 函数等待 ActivityManagerService 发送请求创建新的应用程序进程。 </p> </blockquote> <p>zygote 终于要再次上场了！接下来从 ZygoteInit.java 的 main 方法开始回顾一下 zygote 进程的工作：</p> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/com/android/internal/os/ZygoteInit.java>frameworks/base/core/java/com/android/internal/os/ZygoteInit.java</a>：</p> <pre><code class=language-java>public static void main(String argv[]) {
+    try {
+        ...
+        runSelectLoop(abiList);
+        ....
+    } catch (MethodAndArgsCaller caller) {
+        caller.run();
+    } catch (RuntimeException ex) {
+        closeServerSocket();
+        throw ex;
+    }
+}
+</code></pre> <h3 id=312-zygoteinitrunselectloop>3.1.2 ZygoteInit.runSelectLoop</h3> <p>查看 runSelectLoop 方法：</p> <pre><code class=language-java>private static void runSelectLoop(String abiList) throws MethodAndArgsCaller {
+    ...
+    // 循环读取状态
+    while (true) {
+        ...
+        for (int i = pollFds.length - 1; i &gt;= 0; --i) {
+            // 读取的状态不是客户端连接或者数据请求时，进入下一次循环
+            if ((pollFds[i].revents &amp; POLLIN) == 0) {
+                continue;
+            }
+            if (i == 0) {// i = 0 表示跟客户端 Socket 连接上了
+                ZygoteConnection newPeer = acceptCommandPeer(abiList);
+                peers.add(newPeer);
+                fds.add(newPeer.getFileDesciptor());
+            } else {// i &gt; 0 表示接收到客户端 Socket 发送过来的请求
+                // runOnce 方法创建一个新的应用程序进程
+                boolean done = peers.get(i).runOnce();
+                if (done) {
+                    peers.remove(i);
+                    fds.remove(i);
+                }
+            }
+        }
+    }
+}
+</code></pre> <h3 id=313-zygoteconnectionrunonce>3.1.3 ZygoteConnection.runOnce</h3> <p>查看 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/com/android/internal/os/ZygoteConnection.java>frameworks/base/core/java/com/android/internal/os/ZygoteConnection.java</a> 的 runOnce 方法：</p> <pre><code class=language-java>boolean runOnce() throws ZygoteInit.MethodAndArgsCaller {
+    String args[];
+    Arguments parsedArgs = null;
+    FileDescriptor[] descriptors;
+
+    try {
+        // 读取 socket 客户端发送过来的参数列表
+        args = readArgumentList();
+        descriptors = mSocket.getAncillaryFileDescriptors();
+    } catch (IOException ex) {
+        // EOF reached.
+        closeSocket();
+        return true;
+    }
+    ...
+    try {
+        // 将 socket 客户端传递过来的参数，解析成 Arguments 对象格式
+        parsedArgs = new Arguments(args);
+        ...
+        // 同样调用 Zygote.java 的 forkAndSpecialize 方法 fock 出子进程
+        pid = Zygote.forkAndSpecialize(parsedArgs.uid, parsedArgs.gid, parsedArgs.gids,
+                parsedArgs.debugFlags, rlimits, parsedArgs.mountExternal, parsedArgs.seInfo,
+                parsedArgs.niceName, fdsToClose, parsedArgs.instructionSet,
+                parsedArgs.appDataDir);
+    } catch (Exception e) {
+        ...
+    }
+
+    try {
+        if (pid == 0) {
+            // 子进程执行
+            IoUtils.closeQuietly(serverPipeFd);
+            serverPipeFd = null;
+            // 进入子进程流程
+            handleChildProc(parsedArgs, descriptors, childPipeFd, newStderr);
+            return true;
+        } else {
+            // 父进程执行
+            IoUtils.closeQuietly(childPipeFd);
+            childPipeFd = null;
+            return handleParentProc(pid, descriptors, serverPipeFd, parsedArgs);
+        }
+    } finally {
+        IoUtils.closeQuietly(childPipeFd);
+        IoUtils.closeQuietly(serverPipeFd);
+    }
+}
+</code></pre> <h3 id=314-zygoteconnectionhandlechildproc>3.1.4 ZygoteConnection.handleChildProc</h3> <p>首先解析 Socket 客户端传过来的参数，<a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/com/android/internal/os/Zygote.java>Zygote.java</a> 的 forkAndSpecialize 返回的 pid == 0 的时候表示此时在 fock 出来的子进程中执行，继续调用 handleChildProc 方法，并将参数继续层层传递：</p> <pre><code class=language-java>private void handleChildProc(Arguments parsedArgs, FileDescriptor[] 
+    descriptors, FileDescriptor pipeFd, PrintStream newStderr) throws ZygoteInit.MethodAndArgsCaller {
+    /*由于 fock 出来的 system_server 进程会复制 zygote 进程的地址空间，因此它也得到了 zygote
+    进程中的 Socket，这个 Socket 对它来说并无用处，这里将其关闭 
+    */
+    closeSocket();
+    ZygoteInit.closeServerSocket();
+    ...
+    if (parsedArgs.niceName != null) {
+        // 设置进程名
+        Process.setArgV0(parsedArgs.niceName);
+    }
+
+    if (parsedArgs.invokeWith != null) {
+        ...
+    } else {
+        // 调用 RuntimeInit 的 zygoteInit 方法
+        RuntimeInit.zygoteInit(parsedArgs.targetSdkVersion,
+                parsedArgs.remainingArgs, null);
+    }
+}
+</code></pre> <h3 id=315-runtimeinitzygoteinit>3.1.5 RuntimeInit.zygoteInit</h3> <p>查看 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/com/android/internal/os/RuntimeInit.java>frameworks/base/core/java/com/android/internal/os/RuntimeInit.java</a> 的 zygoteInit 方法：</p> <pre><code class=language-java>public static final void zygoteInit(int targetSdkVersion, String[] argv, 
+            ClassLoader classLoader) throws ZygoteInit.MethodAndArgsCaller {
+    if (DEBUG) Slog.d(TAG, &quot;RuntimeInit: Starting application from zygote&quot;);
+
+    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;RuntimeInit&quot;);
+    // 重定向 log 输出
+    redirectLogStreams();
+    // 初始化一些通用的设置
+    commonInit(); 
+    /**
+     *通过 Native 层中 AndroidRuntime.cpp 的 JNI 方法最终调用 app_main.cpp 的 
+     *onZygoteInit 方法启动 Binder 线程池， 使 system_server 进程可以使用 Binder  *与其他进程通信
+     **/
+    nativeZygoteInit(); 
+    applicationInit(targetSdkVersion, argv, classLoader);
+}
+</code></pre> <h3 id=316-runtimeinitapplicationinit>3.1.6 RuntimeInit.applicationInit</h3> <p>继续调用 applicationInit 方法：</p> <pre><code class=language-java>private static void applicationInit(int targetSdkVersion, String[] argv, ClassLoader classLoader)
+            throws ZygoteInit.MethodAndArgsCaller {
+    ...
+    // 提取出参数里面的要启动的类的名字
+    invokeStaticMain(args.startClass, args.startArgs, classLoader);
+}
+</code></pre> <h3 id=317-runtimeinitinvokestaticmain>3.1.7 RuntimeInit.invokeStaticMain</h3> <p>主要调用了 invokeStaticMain 方法：</p> <pre><code class=language-java>private static void invokeStaticMain(String className, String[] argv, ClassLoader classLoader)
+         throws ZygoteInit.MethodAndArgsCaller {
+    Class&lt;?&gt; cl;
+    try {
+        /** className 为通过 Socket 客户端（AMS）传递过来的一系列参数中的其中一个，这里获取到的值为传&quot;com.android.app.ActivityThread&quot;，然后通过反射得到 ActivityThread 类 **/
+        cl = Class.forName(className, true, classLoader);
+    } catch (ClassNotFoundException ex) {
+        throw new RuntimeException(
+            &quot;Missing class when invoking static main &quot; + className, ex);
+    }
+    Method m;
+    try {
+        // 找到 ActivityThread 类的 main 方法
+        m = cl.getMethod(&quot;main&quot;, new Class[] { String[].class });
+    } catch (NoSuchMethodException ex) {
+        throw new RuntimeException(
+            &quot;Missing static main on &quot; + className, ex);
+    } catch (SecurityException ex) {
+        throw new RuntimeException(
+            &quot;Problem getting static main on &quot; + className, ex);
+    }
+    int modifiers = m.getModifiers();
+    if (! (Modifier.isStatic(modifiers) &amp;&amp; Modifier.isPublic(modifiers))) {
+        throw new RuntimeException(
+            &quot;Main method is not public and static on &quot; + className);
+    }
+    /** 将 main 方法包装在 ZygoteInit.MethodAndArgsCaller 类中并作为异常抛出
+    捕获异常的地方在上一小节中 ZygoteInit.java 的 main 方法 **/
+    throw new ZygoteInit.MethodAndArgsCaller(m, argv);
+}
+</code></pre> <h3 id=318-methodandargscallerrun>3.1.8 MethodAndArgsCaller.run</h3> <p>回到 ZygoteInit 的 main 方法：</p> <pre><code class=language-java>public static void main(String argv[]) {
+    ...
+    closeServerSocket();
+    } catch (MethodAndArgsCaller caller) {
+        // 接收到 caller 对象后调用它的 run 方法
+        caller.run();
+    } catch (RuntimeException ex) {
+        Log.e(TAG, &quot;Zygote died with exception&quot;, ex);
+        closeServerSocket();
+        throw ex;
+    }
+}
+</code></pre> <p>跟 system_server 进程的启动过程一样，这里同样通过抛出异常的方式来清空调用 ActivityThread.main 之前的方法栈帧。</p> <p>ZygoteInit 的 MethodAndArgsCaller 类是一个 Exception 类，同时也实现了 Runnable 接口：</p> <pre><code class=language-java>public static class MethodAndArgsCaller extends Exception
+        implements Runnable {
+
+    private final Method mMethod;
+    private final String[] mArgs;
+
+    public MethodAndArgsCaller(Method method, String[] args) {
+        mMethod = method;
+        mArgs = args;
+    }
+    public void run() {
+        try {
+            // 调用传递过来的 mMethod
+            mMethod.invoke(null, new Object[] { mArgs });
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            ...
+        }
+    }
+}
+</code></pre> <h3 id=319-activitythread-main>3.1.9 ActivityThread .main</h3> <p>最后通过反射调用到 ActivityThread 的 main 方法：</p> <pre><code class=language-java>public static void main(String[] args) {
+    ...
+    Environment.initForCurrentUser();
+    ...
+    Process.setArgV0(&quot;&lt;pre-initialized&gt;&quot;);
+    // 创建主线程 Looper
+    Looper.prepareMainLooper();
+
+    ActivityThread thread = new ActivityThread();
+    // attach 到系统进程
+    thread.attach(false);
+
+    if (sMainThreadHandler == null) {
+        sMainThreadHandler = thread.getHandler();
+    }
+
+    // 主线程进入轮询状态
+    Looper.loop();
+
+    // 抛出异常说明轮询出现问题
+    throw new RuntimeException(&quot;Main thread loop unexpectedly exited&quot;);
+}
+</code></pre> <h3 id=32>3.2 小结</h3> <p>zygote 进程作为 Socket 服务端在接收到作为客户端的 AMS 发送过来的请求和参数之后，fock 出新的进程并根据各种参数进程了初始化的工作，这个过程和 zygote 启动 system_server 进程的过程如出一辙，时序图如下所示：</p> <p><img alt src=https://pic3.zhimg.com/v2-8335460e744915d135ac1f5155d98c32_b.jpg></p> <h2 id=4-activitythread-activity>4. ActivityThread —— Activity</h2> <h3 id=41>4.1 调用过程分析</h3> <h3 id=411-activitythreadattach>4.1.1 ActivityThread.attach</h3> <p>上一小节的最后，ActivityThread 的 main 通过反射被运行起来了，接着会调用 ActivityThread 的 attach 方法：</p> <pre><code class=language-java>private void attach(boolean system) {
+    ...
+    mSystemThread = system;
+    if (!system) {
+        ...
+        // 获取 ActivityManagerProxy 对象
+        final IActivityManager mgr = ActivityManagerNative.getDefault();
+        try {
+            // 通过 Binder 调用 AMS 的 attachApplication 方法
+            mgr.attachApplication(mAppThread);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
+        }
+    } else {
+        ...
+    }
+    ...
+}
+</code></pre> <p>这里，我们再一次通过 Binder IPC 机制跟 AMS 通信，通信模型跟前面 Launcher App 调用 AMS 的 startActivity 方法一样，getDefault 过程不重复分析，这次是调用了 AMS 的 attachApplication 方法，注意这里将 ApplicationThead 类型的 mAppThread 对象作为参数传递了过去，ApplicationThead 是 ActivityThread 的一个内部类，后面我们会讲到，先查看 AMP 的 attachApplication 方法：</p> <h3 id=412-activitymanagerproxyattachapplication>4.1.2 ActivityManagerProxy.attachApplication</h3> <pre><code class=language-java>public void attachApplication(IApplicationThread app) throws RemoteException {
+    ...
+    // 调用 asBinder 方法使其能够跨进程传输
+    data.writeStrongBinder(app.asBinder());
+    // 通过 transact 方法将数据交给 Binder 驱动
+    mRemote.transact(ATTACH_APPLICATION_TRANSACTION, data, reply, 0); 
+    reply.readException();
+    data.recycle();
+    reply.recycle();
+}
+</code></pre> <h3 id=413-activitymanagernativeontransact>4.1.3 ActivityManagerNative.onTransact</h3> <pre><code class=language-java>public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+    switch (code) {
+        ...
+        case ATTACH_APPLICATION_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            // 获取 ApplicationThread 的代理对象，这里返回的是 ApplicationThreadNative(ATN)
+            // 的内部类：ApplicationThreadProxy(ATP) 对象
+            IApplicationThread app = ApplicationThreadNative.asInterface(data.readStrongBinder());
+            if (app != null) {
+                // 委托给 AMS 执行
+                attachApplication(app);
+            }
+            reply.writeNoException();
+            return true;
+        }
+        ...
+    }
+}
+</code></pre> <p>asInterface 将 ActivityThread 对象转换成了 <a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/app/ActivityManagerNative.java>ApplicationThreadNative(ATN)</a> 的 Binder 代理对象 ApplicationThreadProxy(ATP)，并作为参数传给 attachApplication 方法，其中 ATP 是 ATN 的内部类。</p> <h3 id=414-activitymanagerserviceattachapplication>4.1.4 ActivityManagerService.attachApplication</h3> <pre><code class=language-java>public final void attachApplication(IApplicationThread thread) {
+    synchronized (this) {
+        int callingPid = Binder.getCallingPid();
+        final long origId = Binder.clearCallingIdentity();
+        attachApplicationLocked(thread, callingPid);
+        Binder.restoreCallingIdentity(origId);
+    }
+}
+</code></pre> <h3 id=415-activitymanagerserviceattachapplicationlocked>4.1.5 ActivityManagerService.attachApplicationLocked</h3> <pre><code class=language-java>private final boolean attachApplicationLocked(IApplicationThread thread, int pid) {
+    ProcessRecord app;
+    ...
+    try {
+        // 绑定死亡通知
+        AppDeathRecipient adr = new AppDeathRecipient(app, pid, thread);
+        thread.asBinder().linkToDeath(adr, 0);
+        app.deathRecipient = adr;
+    } catch (RemoteException e) {
+        app.resetPackageList(mProcessStats);
+        // 如果 system_server 进程死亡则重新启动进程
+        startProcessLocked(app, &quot;link fail&quot;, processName); 
+        return false;
+    }
+    ...
+    try {
+        ...
+        // 获取应用appInfo
+        ApplicationInfo appInfo = app.instrumentationInfo != null
+                ? app.instrumentationInfo : app.info;
+        ...
+        // 绑定应用
+        thread.bindApplication(processName, appInfo, providers, app.instrumentationClass,
+                profilerInfo, app.instrumentationArguments, app.instrumentationWatcher,
+                app.instrumentationUiAutomationConnection, testMode, enableOpenGlTrace,
+                isRestrictedBackupMode || !normalMode, app.persistent,
+                new Configuration(mConfiguration), app.compat,
+                getCommonServicesLocked(app.isolated),
+                mCoreSettingsObserver.getCoreSettingsLocked());
+        ...
+    } catch (Exception e) {
+        app.resetPackageList(mProcessStats);
+        app.unlinkDeathRecipient();
+        // bindApplication 失败也要重启进程
+        startProcessLocked(app, &quot;bind fail&quot;, processName);
+        return false;
+    }
+    // 如果是 Activity: 检查最顶层可见的Activity是否等待在该进程中运行
+    if (normalMode) {
+        try {
+            if (mStackSupervisor.attachApplicationLocked(app)) {
+                didSomething = true;
+            }
+        } catch (Exception e) {
+            badApp = true;
+        }
+    }
+    // 如果是 Service: 寻找所有需要在该进程中运行的服务
+    if (!badApp) {
+        try {
+            didSomething |= mServices.attachApplicationLocked(app, processName);
+        } catch (Exception e) {
+            badApp = true;
+        }
+    }
+
+    // 如果是 BroadcastReceiver: 检查是否在这个进程中有下一个广播接收者
+    if (!badApp &amp;&amp; isPendingBroadcastProcessLocked(pid)) {
+        try {
+            didSomething |= sendPendingBroadcastsLocked(app);
+        } catch (Exception e) {
+            badApp = true;
+        }
+    }
+    // 检查是否在这个进程中有下一个 backup 代理
+    if (!badApp &amp;&amp; mBackupTarget != null &amp;&amp; mBackupTarget.appInfo.uid == app.uid) {
+        ensurePackageDexOpt(mBackupTarget.appInfo.packageName);
+        try {
+            thread.scheduleCreateBackupAgent(mBackupTarget.appInfo,
+                    compatibilityInfoForPackageLocked(mBackupTarget.appInfo),
+                    mBackupTarget.backupMode);
+        } catch (Exception e) {
+            badApp = true;
+        }
+    }
+    if (badApp) { 
+        // 杀掉 badApp
+        app.kill(&quot;error during init&quot;, true);
+        handleAppDiedLocked(app, false, true);
+        return false;
+    }
+    if (!didSomething) {
+        // 更新 adj(组件的权值)
+        updateOomAdjLocked(); 
+    }
+    return true;
+}
+</code></pre> <p>首先，通过 ATP 使用 Binder 向 ATN 发起 bindApplication 请求，然后通过 normalMode 字段判断是否为 Activity，如果是则执行 ActivityStackSupervisor 的 attachApplicationLocked 方法。</p> <h3 id=4151-activitythreadjavaapplicationthreadbindapplication>4.1.5.1 ActivityThread.java::ApplicationThread.bindApplication</h3> <p>thread 对象类型是 ATP，通过 Binder 驱动调到了 ATN 的方法，ATN 是一个抽象类，它的实现都委托给了 ApplicationThread(这跟 AMS 跟 AMN 的关系一样)，ApplicationThread 作为 ActivityThread 的内部类存在，它的 binderApplication 方法如下：</p> <p><a href=https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/app/ActivityThread.java>ActivityThread.java::ApplicationThread</a>：</p> <pre><code class=language-java>public final void bindApplication(String processName, ApplicationInfo appInfo,
+    List&lt;ProviderInfo&gt; providers, ComponentName instrumentationName, ProfilerInfo profilerInfo,
+    Bundle instrumentationArgs, IInstrumentationWatcher instrumentationWatcher,
+    IUiAutomationConnection instrumentationUiConnection, int debugMode, boolean
+    enableOpenGlTrace, boolean isRestrictedBackupMode, boolean persistent, Configuration
+    config, CompatibilityInfo compatInfo, Map&lt;String, IBinder&gt; services, Bundle coreSettings) {
+
+    if (services != null) {
+        // 将services缓存起来, 减少binder检索服务的次数
+        ServiceManager.initServiceCache(services);
+    }
+    ...
+    // 发送消息 H.BIND_APPLICATION 给 Handler 对象
+    sendMessage(H.BIND_APPLICATION, data);
+}
+</code></pre> <p>H 是 ActivityThread 中的一个 Handler 对象，用于处理发送过来的各种消息：</p> <pre><code class=language-java>private class H extends Handler {
+    public static final int BIND_APPLICATION        = 110;
+
+    public void handleMessage(Message msg) {
+        ...
+        case BIND_APPLICATION:
+            Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;bindApplication&quot;);
+            AppBindData data = (AppBindData)msg.obj;
+            handleBindApplication(data);
+            Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+            break;
+        ...
+    }
+}
+</code></pre> <p>调用了 handleBindApplication 方法：</p> <pre><code class=language-java>private void handleBindApplication(AppBindData data) {
+    // 获取 LoadedApk 对象
+    data.info = getPackageInfoNoCheck(data.appInfo, data.compatInfo);
+    ...
+    // 创建 ContextImpl 上下文
+    final ContextImpl appContext = ContextImpl.createAppContext(this, data.info);
+    ...
+    // 创建 Instrumentation 对象
+    if (data.instrumentationName != null) {
+        ...
+    } else {
+        mInstrumentation = new Instrumentation();
+    }
+
+    try {
+        // 调用 LoadedApk 的 makeApplication 方法创建 Application
+        Application app = data.info.makeApplication(data.restrictedBackupMode, null);
+        mInitialApplication = app;
+        ...
+        mInstrumentation.onCreate(data.instrumentationArgs);
+        // 调用 Application.onCreate 方法
+        mInstrumentation.callApplicationOnCreate(app);
+    } finally {
+        StrictMode.setThreadPolicy(savedPolicy);
+    }
+}
+</code></pre> <h3 id=4152-activitystacksupervisorattachapplicationlocked>4.1.5.2 ActivityStackSupervisor.attachApplicationLocked</h3> <p>在 <strong>4.1.4</strong> 小节中通过 Binder 向 ActivityThread 发起 bindApplication 请求后，会根据启动组件的类型去做相应的处理，如果是 Acitivity，则会调用 ActivityStackSupervisor 的 attachApplicationLocked 方法：</p> <pre><code class=language-java>boolean attachApplicationLocked(ProcessRecord app) throws RemoteException {
+    final String processName = app.processName;
+    boolean didSomething = false;
+    for (int displayNdx = mActivityDisplays.size() - 1; displayNdx &gt;= 0; --displayNdx) {
+        ArrayList&lt;ActivityStack&gt; stacks = mActivityDisplays.valueAt(displayNdx).mStacks;
+        for (int stackNdx = stacks.size() - 1; stackNdx &gt;= 0; --stackNdx) {
+            final ActivityStack stack = stacks.get(stackNdx);
+            if (!isFrontStack(stack)) {
+                continue;
+            }
+            // 获取前台stack中栈顶第一个非 finishing 状态的 Activity
+            ActivityRecord hr = stack.topRunningActivityLocked(null);
+            if (hr != null) {
+                if (hr.app == null &amp;&amp; app.uid == hr.info.applicationInfo.uid &amp;&amp; processName.equals(hr.processName)) {
+                    try {
+                        // 真正的启动 Activity
+                        if (realStartActivityLocked(hr, app, true, true)) {
+                            didSomething = true;
+                        }
+                    } catch (RemoteException e) {
+                        throw e;
+                    }
+                }
+            }
+        }
+    }
+    ...
+    return didSomething;
+}
+</code></pre> <h3 id=41521-activitystacksupervisorrealstartactivitylocked>4.1.5.2.1 ActivityStackSupervisor.realStartActivityLocked</h3> <p>前面 <strong>2.1.8 ActivityStackSupervisor.startSpecificActivityLocked</strong> 小节中分析过，如果当前 Activity 依附的 Application 已经被启动，则调用 realStartActivityLocked 方法，否则创建新的进程，再创建新的进程之后，两个流程的在这里合并起来了：</p> <pre><code class=language-java>final boolean realStartActivityLocked(ActivityRecord r, ProcessRecord app, boolean andResume, boolean checkConfig) throws RemoteException {
+    ...
+    final ActivityStack stack = task.stack;
+    try {
+        ...
+        app.forceProcessStateUpTo(mService.mTopProcessState);
+        // 通过 Binder 调用 ApplicationThread 的 scheduleLaunchActivity 方法
+        app.thread.scheduleLaunchActivity(new Intent(r.intent), r.appToken,
+                System.identityHashCode(r), r.info, new Configuration(mService.mConfiguration),
+                new Configuration(stack.mOverrideConfig), r.compat, r.launchedFromPackage,
+                task.voiceInteractor, app.repProcState, r.icicle, r.persistentState, results,
+                newIntents, !andResume, mService.isNextTransitionForward(), profilerInfo);
+        ...
+    } catch (RemoteException e) {
+        if (r.launchFailed) {
+            // 第二次启动失败，则结束该 Activity
+            mService.appDiedLocked(app);
+            stack.requestFinishActivityLocked(r.appToken, Activity.RESULT_CANCELED, null,
+                    &quot;2nd-crash&quot;, false);
+            return false;
+        }
+        // 第一个启动失败，则重启进程
+        app.activities.remove(r);
+        throw e;
+    }
+    ...
+    return true;
+}
+</code></pre> <p>这里有一次使用 Binder 调用 ApplicationThread 的 scheduleLaunchActivity 方法。</p> <h3 id=41522-applicationthreadschedulelaunchactivity>4.1.5.2.2 ApplicationThread.scheduleLaunchActivity</h3> <pre><code class=language-java>public final void scheduleLaunchActivity(Intent intent, IBinder token, int ident, ActivityInfo 
+        info, Configuration curConfig, Configuration overrideConfig, CompatibilityInfo 
+        compatInfo, String referrer, IVoiceInteractor voiceInteractor, int procState, Bundle 
+        state, PersistableBundle persistentState, List&lt;ResultInfo&gt; pendingResults, 
+        List&lt;ReferrerIntent&gt; pendingNewIntents, boolean notResumed, boolean isForward, 
+        ProfilerInfo profilerInfo) {
+    ...
+    updateProcessState(procState, false);
+    ActivityClientRecord r = new ActivityClientRecord();
+    ...
+    sendMessage(H.LAUNCH_ACTIVITY, r);
+ }
+</code></pre> <p>上面提到过，H 是 ActivityThread 中一个 Handler 类，它接收到 LAUNCH_ACTIVITY 消息后会调用 handleLaunchActivity 方法。</p> <h3 id=41523-activitythreadhandlelaunchactivity>4.1.5.2.3 ActivityThread.handleLaunchActivity</h3> <pre><code class=language-java>private void handleLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    ...
+    // 初始化 WMS
+    WindowManagerGlobal.initialize();
+    // 执行 performLaunchActivity 方法
+    Activity a = performLaunchActivity(r, customIntent);
+    if (a != null) {
+        r.createdConfig = new Configuration(mConfiguration);
+        Bundle oldState = r.state;
+        // 执行 handleResumeActivity 方法，最终调用 onStart 和 onResume 方法
+        handleResumeActivity(r.token, false, r.isForward,
+                !r.activity.mFinished &amp;&amp; !r.startsNotResumed);
+
+        if (!r.activity.mFinished &amp;&amp; r.startsNotResumed) {
+            r.activity.mCalled = false;
+            mInstrumentation.callActivityOnPause(r.activity);
+            r.paused = true;
+        }
+    } else {
+        // 停止该 Activity
+        ActivityManagerNative.getDefault()
+            .finishActivity(r.token, Activity.RESULT_CANCELED, null, false);
+    }
+}
+</code></pre> <h3 id=41424-applicationthreadperformlaunchactivity>4.1.4.2.4 ApplicationThread.performLaunchActivity</h3> <pre><code class=language-java>private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    ...
+    Activity activity = null;
+    try {
+        java.lang.ClassLoader cl = r.packageInfo.getClassLoader();
+        // Instrumentation 中使用反射创建 Activity
+        activity = mInstrumentation.newActivity(cl, component.getClassName(), r.intent);
+        ...
+    } catch (Exception e) {
+        ...
+    }
+
+    try {
+        // 创建 Application 对象并调用 Application 的 onCreate 方法
+        Application app = r.packageInfo.makeApplication(false, mInstrumentation);
+
+        if (activity != null) {
+            ...
+            // attach 到 Window 上
+            activity.attach(appContext, this, getInstrumentation(), r.token,
+                    r.ident, app, r.intent, r.activityInfo, title, r.parent,
+                    r.embeddedID, r.lastNonConfigurationInstances, config,
+                    r.referrer, r.voiceInteractor);
+
+            if (customIntent != null) {
+                activity.mIntent = customIntent;
+            }
+            r.lastNonConfigurationInstances = null;
+            activity.mStartedActivity = false;
+            int theme = r.activityInfo.getThemeResource();
+            if (theme != 0) {
+                // 设置主题
+                activity.setTheme(theme);
+            }
+
+            activity.mCalled = false;
+            if (r.isPersistable()) {
+                // 重新创建的 Activity
+                mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);
+            } else {
+                // 第一次创建的 Activity
+                mInstrumentation.callActivityOnCreate(activity, r.state);
+            }
+            ...
+        }
+        ...
+    }  catch (Exception e) {
+        ...
+    }
+    return activity;
+}
+</code></pre> <h3 id=41525-instrumentationcallactivityoncreate>4.1.5.2.5 Instrumentation.callActivityOnCreate</h3> <pre><code class=language-java>public void callActivityOnCreate(Activity activity, Bundle icicle,
+            PersistableBundle persistentState) {
+    prePerformCreate(activity);
+    // 调用 Activity 的 performCreate 方法
+    activity.performCreate(icicle, persistentState);
+    postPerformCreate(activity);
+}
+</code></pre> <h3 id=41526-activityperformcreate>4.1.5.2.6 Activity.performCreate</h3> <pre><code class=language-java>final void performCreate(Bundle icicle, PersistableBundle persistentState) {
+        restoreHasCurrentPermissionRequest(icicle);
+    onCreate(icicle, persistentState);
+    mActivityTransitionState.readState(icicle);
+    performCreateCommon();
+}
+</code></pre> <p>终于，onCreate 方法被调用了！！！</p> <h2 id=42>4.2 小结</h2> <p>从 ActivityThread 到最终 Activity 被创建及生命周期被调用，核心过程涉及到了三次 Binder IPC 过程，分别是：ActivityThread 调用 AMS 的 attachApplication 方法、AMS 调用 ApplicationThread 的 bindApplication 方法、ASS 调用 Application 的 attachApplicationLocked 方法，整个过程的时序图如下：</p> <p><img alt src=https://pic1.zhimg.com/v2-d69321034752cc14c89a5c27417a6fc0_b.jpg></p> <h2 id=5>5. 总结</h2> <p>纵观整个过程，从 Launcher 到 AMS、从 AMS 再到 Zygote、再从 Zygote 到 ActivityThread，最后在 ActivitThread 中层层调用到 Activity 的生命周期方法，中间涉及到了无数的细节，但总体上脉络还是非常清晰的，各个 Android 版本的 Framework 层代码可以某些过程的实现不太一样，但是整个调用流程大体上也是相同的，借用 <a href=http://gityuan.com/android/ >Gityuan</a> 大神的一张图作为结尾：</p> <p><img alt src=https://pic4.zhimg.com/v2-1ba96cc3216a47e04b9a220ea1eb64a3_b.jpg></p> <p><strong>系列文章</strong></p> <p><strong>参考文章</strong></p> <p><a href=http://gityuan.com/2016/03/12/start-activity/ >startActivity启动过程分析 - Gityuan博客 | 袁辉辉的技术博客</a></p> </article> </div> </div> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright &copy; 2022 - 3022 <span style=float:right><a href=http://beian.miit.gov.cn/ >鄂ICP备19027194号</a></span> </div> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script> <script src=../../assets/javascripts/bundle.220ee61c.min.js></script> </body> </html>
